@@ -33,22 +33,52 @@ void ofApp::setup(){
 
 	ofBackground(0, 0, 0);
 
+	oscReceiver.setup(oscPort);
+	
 	ofSetWindowTitle("OF Spout Receiver"); // Set the window title to show that it is a Spout Receiver
 	bInitialized  = false; // Spout receiver initialization
 	SenderName[0] = 0; // the name will be filled when the receiver connects to a sender
-
+	
 	// Allocate a texture for shared texture transfers
 	// An openFrameWorks texture is used so that it can be drawn.
-	g_Width  = ofGetWidth();
+	g_Width = ofGetWidth();
 	g_Height = ofGetHeight();
-	myTexture.allocate(g_Width, g_Height, GL_RGBA);
-
+	myFbo->allocate(g_Width, g_Height, GL_RGBA);
 } // end setup
 
+void ofApp::onOSCMessageReceived(ofxOscMessage &msg) {
+	string addr = msg.getAddress();
+	string message = msg.getArgAsString(0);
+	//cout << "addr:" << addr << ",msg:" << message << endl;
+	if (addr == "videoRecord") {
+		//TODO: test movie exporter
+		if (message == "start") {
+			cout << "start recording" << endl;
+		}
+		else if(message == "stop") {
+			cout << "stop recording" << endl;
+		}
+	}
+	else if (addr == "winCtrl") {
+		if (message == "show") {
+			cout << "make all windows foreground" << endl;
+			setAllWindowsForeground();
+		}
+		else if (message == "hide") {
+			cout << "hide all windows" << endl;
+			setAllWindowsBackground();
+		}
+	}
+
+}
 
 //--------------------------------------------------------------
 void ofApp::update() {
-
+	while (oscReceiver.hasWaitingMessages()) {
+		ofxOscMessage m;
+		oscReceiver.getNextMessage(&m);
+		onOSCMessageReceived(m);
+	}
 }
 
 //--------------------------------------------------------------
@@ -77,8 +107,7 @@ void ofApp::draw() {
 				g_Width  = width;
 				g_Height = height;
 				// Update the local texture to receive the new dimensions
-				myTexture.allocate(g_Width, g_Height, GL_RGBA);
-				
+				myFbo->allocate(g_Width, g_Height, GL_RGBA);
 				//cout << "tex width:" << g_Width << ",height:" << g_Height << endl;
 			}
 
@@ -100,9 +129,18 @@ void ofApp::draw() {
 		width  = g_Width;
 		height = g_Height;
 
+		/*
+		myFbo->begin();
+		ofClear(255, 255, 255, 0);
+		myFbo->end();
+		*/
+		
+		auto associatedTex = myFbo->getTextureReference();
+		auto associatedTexData = associatedTex.getTextureData();
+
 		// Try to receive into the local the texture at the current size
 		if(spoutreceiver.ReceiveTexture(SenderName, width, height, 
-			myTexture.getTextureData().textureID, myTexture.getTextureData().textureTarget)) {
+			associatedTexData.textureID, associatedTexData.textureTarget)) {
 
 			//	If the width and height are changed, the local texture has to be resized.
 			if(width != g_Width || height != g_Height ) {
@@ -110,31 +148,27 @@ void ofApp::draw() {
 				g_Width  = width;
 				g_Height = height;
 				// Update the local texture to receive the new dimensions
-				myTexture.allocate(g_Width, g_Height, GL_RGBA);
-
+				myFbo->allocate(g_Width, g_Height, GL_RGBA);
 				return; // quit for next round
 			}
-
-			//draw whole
-			//myTexture.draw(0, 0, ofGetWidth(), ofGetHeight());
 
 			//draw partial
 			unsigned int winWidth = ofGetWidth();
 			unsigned int winHeight = ofGetHeight();
 			unsigned int startX = (winWidth - overlapPixels) * partIndex;
+			associatedTex.drawSubsection(0, 0, winWidth, winHeight, startX, 0, winWidth, winHeight);
 			
-			myTexture.drawSubsection(0, 0, winWidth, winHeight, startX, 0, winWidth, winHeight);
-
 			// Show what it is receiving
-			if(showSender) {
-				sprintf(str, "Receiving from : [%s]", SenderName);
+			if(showDebugInfo) {
+				sprintf(str, "From : [%s], TexSize:(%d x %d), winSize:(%d x %d)", SenderName, g_Width, g_Height, winWidth, winHeight);
 				ofDrawBitmapString(str, 20, 20);
 			}
-			
+
 			if (enableSenderSelector) {
 				sprintf(str, "RH click select sender");
 				ofDrawBitmapString(str, 15, ofGetHeight() - 20);
 			}
+
 		}
 		else {
 			// A texture read failure might happen if the sender
@@ -147,11 +181,16 @@ void ofApp::draw() {
 
 	// Show fps
 	if (showFPS) {
+		ofSetColor(0, 255, 0);
 		sprintf(str, "fps: %3.3d", (int)ofGetFrameRate());
-		ofSetColor(0);
-		ofDrawBitmapString(str, ofGetWidth() - 120, 20);
+		ofDrawBitmapString(str, 20, 60);
 	}
-	 // ===================
+	
+	if (showMonitorIndex) {
+		ofSetColor(255, 0, 0);
+		sprintf(str, "Monitor: %d", monitorIndex);
+		ofDrawBitmapString(str, 20, 40);
+	}
 
 }
 
@@ -185,8 +224,7 @@ void ofApp::keyPressed(int key) {
 }
 
 void ofApp::setAllWindowsForeground() {
-
-	for (const auto& win : windows) {
+	for (const auto& win : *windows) {
 		HWND win32win = win->getWin32Window();
 		ShowWindow(win32win, SW_SHOWNOACTIVATE);
 	}
@@ -195,8 +233,7 @@ void ofApp::setAllWindowsForeground() {
 }
 
 void ofApp::setAllWindowsBackground() {
-
-	for (const auto& win : windows) {
+	for (const auto& win : *windows) {
 		HWND win32win = win->getWin32Window();
 		ShowWindow(win32win, SW_HIDE);
 	}

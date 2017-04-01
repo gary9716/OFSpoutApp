@@ -1,5 +1,6 @@
 #include "ofMain.h"
 #include "ofApp.h"
+#include "displayApp.h"
 
 /*
 	=========================================================================
@@ -50,34 +51,45 @@ string outputWorkingDir() {
 }
 
 bool usingParams = false;
+const int texWidth = 15390;
+const int texHeight = 1200;
 
-// for default console
+// for displaying console ( debugging use )
 //========================================================================
-int main() {
+int main() { // Properties > Linker > System > Subsystem, set the field to "Windows (/SUBSYSTEM:CONSOLE)"
 
-// for window without console
+// for hiding console
 //========================================================================
-//int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd) {
+//int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd) { // Properties > Linker > System > Subsystem, set the field to "Windows (/SUBSYSTEM:WINDOWS)"
 	
-
 	string workDirPath = outputWorkingDir();
 	ifstream myfile("params.txt");
 	string line;
+	vector<int> monitorIndices;
 	vector<int> correspond;
 	if (myfile.is_open())
 	{
 		getline(myfile, line);
 		auto params = ofSplitString(line, ",");
 		for (string param : params) {
-			correspond.push_back(stoi(param));
+			monitorIndices.push_back(stoi(param));
 		}
 
+		getline(myfile, line);
+		params = ofSplitString(line, ",");
+		for (string param : params) {
+			correspond.push_back(stoi(param));
+		}
 		myfile.close();
 	}
 
-
 	int numMonitors = outputMonitorInfo();
-	if (correspond.capacity() == numMonitors)
+	
+	if (numMonitors == 0)
+		return -1;
+	
+	int numParams = monitorIndices.capacity();
+	if (correspond.capacity() == monitorIndices.capacity() && numParams > 0)
 		usingParams = true;
 
 	ofGLFWWindowSettings settings;
@@ -87,25 +99,51 @@ int main() {
 	settings.setPosition(ofVec2f(0, 0));
 	
 	vector<shared_ptr<ofAppBaseWindow>> windows;
+	int partIndex = 0;
 
-	for (int i = 0; i < numMonitors; i++) {
-		
-		settings.monitor = i; //the index in monitors
-		
-		auto mainWindow = ofCreateWindow(settings);
-		
-		int partIndex = i;
-		if (usingParams)
+	if (usingParams) {
+		settings.monitor = monitorIndices[0]; //the index in monitors
+		partIndex = correspond[0];
+	}
+	else {
+		settings.monitor = 0; //the index in monitors
+		partIndex = settings.monitor;
+	}
+
+	//create first window and rest of windows would share the same context with first one
+	auto mainWindow = ofCreateWindow(settings);
+	
+	ofFbo* fbo = new ofFbo();
+	auto mainApp = make_shared<ofApp>(settings.monitor, partIndex, windows, fbo);
+	windows.push_back(mainWindow);
+	settings.shareContextWith = mainWindow;
+	ofRunApp(mainWindow, mainApp);
+	
+	if (usingParams) {
+		for (int i = 1; i < numParams; i++) {
+			settings.monitor = monitorIndices[i]; //the index in monitors
 			partIndex = correspond[i];
 
-		auto mainApp = make_shared<ofApp>(partIndex, windows);
+			auto remainedWindow = ofCreateWindow(settings);
+			auto remainedApp = make_shared<displayApp>(settings.monitor, partIndex, fbo);
+			windows.push_back(remainedWindow);
+			ofRunApp(remainedWindow, remainedApp);
+		}
+	}
+	else {
+		for (int i = 1; i < numMonitors; i++) {
+			settings.monitor = i; //the index in monitors
+			partIndex = settings.monitor;
 
-		windows.push_back(mainWindow);
-	
-		ofRunApp(mainWindow, mainApp);
-		
+			auto remainedWindow = ofCreateWindow(settings);
+			auto remainedApp = make_shared<displayApp>(settings.monitor, partIndex, fbo);
+			windows.push_back(remainedWindow);
+			ofRunApp(remainedWindow, remainedApp);
+		}
 	}
 	
+	
+	//make multiple win32 wimdows float without stealing focusing
 	for (const auto& win : windows) {
 		HWND win32win = win->getWin32Window();
 		win->hideCursor();
