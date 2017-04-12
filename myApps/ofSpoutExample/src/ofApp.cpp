@@ -32,18 +32,33 @@
 void ofApp::setup(){
 
 	ofBackground(0, 0, 0);
+	ofSetFrameRate(60);
 
 	oscReceiver.setup(oscPort);
 	
-	ofSetWindowTitle("OF Spout Receiver"); // Set the window title to show that it is a Spout Receiver
+	//movieExporter.setup(15390, 1200, 2000000, 30, CODEC_ID_MPEG4, "mp4");
+
+	ofSetWindowTitle("OF Spout Receiver and OSC Receiver"); // Set the window title to show that it is a Spout Receiver
 	bInitialized  = false; // Spout receiver initialization
 	SenderName[0] = 0; // the name will be filled when the receiver connects to a sender
 	
+	recorder.setPrefix("H:\VideoRecordings\ofImgSequenceRecorder\Test1_"); // this directory must already exist
+	recorder.setFormat("jpg"); // png is really slow but high res, bmp is fast but big, jpg is just right
+	recorder.startThread(false, false);
+
 	// Allocate a texture for shared texture transfers
 	// An openFrameWorks texture is used so that it can be drawn.
 	g_Width = ofGetWidth();
 	g_Height = ofGetHeight();
-	myFbo->allocate(g_Width, g_Height, GL_RGBA);
+
+	if (textureFormat == GL_RGB) {
+		fboImgType = OF_IMAGE_COLOR;
+	}
+	else if (textureFormat == GL_RGBA) {
+		fboImgType = OF_IMAGE_COLOR_ALPHA;
+	}
+
+	myFbo->allocate(g_Width, g_Height, textureFormat);
 } // end setup
 
 void ofApp::onOSCMessageReceived(ofxOscMessage &msg) {
@@ -54,9 +69,24 @@ void ofApp::onOSCMessageReceived(ofxOscMessage &msg) {
 		//TODO: test movie exporter
 		if (message == "start") {
 			cout << "start recording" << endl;
+			isRecording = true;
+
+			/*
+			if (!movieExporter.isRecording())
+			movieExporter.record("ofMovieExporterTest", "H:\VideoRecordings\ofRecordings");
+			*/
+
 		}
 		else if(message == "stop") {
 			cout << "stop recording" << endl;
+			isRecording = false;
+
+
+			/*
+			if (movieExporter.isRecording())
+				movieExporter.stop();
+			*/
+			
 		}
 	}
 	else if (addr == "winCtrl") {
@@ -107,7 +137,7 @@ void ofApp::draw() {
 				g_Width  = width;
 				g_Height = height;
 				// Update the local texture to receive the new dimensions
-				myFbo->allocate(g_Width, g_Height, GL_RGBA);
+				myFbo->allocate(g_Width, g_Height, textureFormat);
 				//cout << "tex width:" << g_Width << ",height:" << g_Height << endl;
 			}
 
@@ -148,15 +178,40 @@ void ofApp::draw() {
 				g_Width  = width;
 				g_Height = height;
 				// Update the local texture to receive the new dimensions
-				myFbo->allocate(g_Width, g_Height, GL_RGBA);
+				myFbo->allocate(g_Width, g_Height, textureFormat);
 				return; // quit for next round
 			}
 
+			if (isRecording) {
+				fastFboReader.readToPixels(*myFbo, pixelBuff, fboImgType);
+				recorder.addFrame(pixelBuff);
+			}
+
+			/*
+			if (!recordingSrcSet) {
+				recordingSrcSet = true;
+				movieExporter.setPixelSource(pixelBuff.getPixels(), 1920, 1200);
+			}
+			*/
+			
 			//draw partial
 			unsigned int winWidth = ofGetWidth();
 			unsigned int winHeight = ofGetHeight();
 			unsigned int startX = (winWidth - overlapPixels) * partIndex;
 			associatedTex.drawSubsection(0, 0, winWidth, winHeight, startX, 0, winWidth, winHeight);
+			
+			/*
+			const unsigned char* ptr = pixelBuff.getPixels();
+			if (ptr != NULL) {
+				sprintf(str, "pixels ptr is valid");
+			}
+			else {
+				sprintf(str, "pixels ptr is invalid");
+			}
+			ofSetColor(255, 0, 0);
+			ofDrawBitmapString(str, 20, 80);
+			
+			*/
 			
 			// Show what it is receiving
 			if(showDebugInfo) {
@@ -201,6 +256,8 @@ void ofApp::exit() {
 	if(bInitialized) 
 		spoutreceiver.ReleaseReceiver(); // Release the receiver
 
+
+	recorder.waitForThread();
 }
 
 //--------------------------------------------------------------

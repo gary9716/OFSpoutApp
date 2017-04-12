@@ -1,39 +1,27 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\ofApp.cpp" />
-    <ClCompile Include="..\SpoutCopy.cpp">
-      <Filter>SpoutSDK</Filter>
+    <ClCompile Include="src\ofApp.cpp">
+      <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\SpoutDirectX.cpp">
-      <Filter>SpoutSDK</Filter>
+    <ClCompile Include="src\main.cpp">
+      <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\SpoutGLDXinterop.cpp">
-      <Filter>SpoutSDK</Filter>
+    <ClCompile Include="src\displayApp.cpp">
+      <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\SpoutGLextensions.cpp">
-      <Filter>SpoutSDK</Filter>
+    <ClCompile Include="src\main.cpp">
+      <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\SpoutMemoryShare.cpp">
-      <Filter>SpoutSDK</Filter>
+    <ClCompile Include="src\ofApp.cpp">
+      <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\SpoutReceiver.cpp">
-      <Filter>SpoutSDK</Filter>
+    <ClCompile Include="..\..\..\addons\ofxFastFboReader\src\ofxFastFboReader.cpp">
+      <Filter>addons\ofxFastFboReader\src</Filter>
     </ClCompile>
-    <ClCompile Include="..\SpoutSDK.cpp">
-      <Filter>SpoutSDK</Filter>
+    <ClCompile Include="..\..\..\addons\ofxMovieExporter\src\ofxMovieExporter.cpp">
+      <Filter>addons\ofxMovieExporter\src</Filter>
     </ClCompile>
-    <ClCompile Include="..\SpoutSender.cpp">
-      <Filter>SpoutSDK</Filter>
-    </ClCompile>
-    <ClCompile Include="..\SpoutSenderNames.cpp">
-      <Filter>SpoutSDK</Filter>
-    </ClCompile>
-    <ClCompile Include="..\SpoutSharedMemory.cpp">
-      <Filter>SpoutSDK</Filter>
-    </ClCompile>
-    <ClCompile Include="src\displayApp.cpp" />
     <ClCompile Include="..\..\..\addons\ofxOsc\src\ofxOscBundle.cpp">
       <Filter>addons\ofxOsc\src</Filter>
     </ClCompile>
@@ -70,47 +58,301 @@
     <ClCompile Include="..\..\..\addons\ofxOsc\libs\oscpack\src\osc\OscTypes.cpp">
       <Filter>addons\ofxOsc\libs\oscpack\src\osc</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\SpoutSDK\SpoutCopy.cpp">
+      <Filter>SpoutSDK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SpoutSDK\SpoutDirectX.cpp">
+      <Filter>SpoutSDK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SpoutSDK\SpoutGLDXinterop.cpp">
+      <Filter>SpoutSDK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SpoutSDK\SpoutGLextensions.cpp">
+      <Filter>SpoutSDK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SpoutSDK\SpoutMemoryShare.cpp">
+      <Filter>SpoutSDK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SpoutSDK\SpoutReceiver.cpp">
+      <Filter>SpoutSDK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SpoutSDK\SpoutSDK.cpp">
+      <Filter>SpoutSDK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SpoutSDK\SpoutSender.cpp">
+      <Filter>SpoutSDK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SpoutSDK\SpoutSenderNames.cpp">
+      <Filter>SpoutSDK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SpoutSDK\SpoutSharedMemory.cpp">
+      <Filter>SpoutSDK</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\ofApp.h" />
-    <ClInclude Include="..\Spout.h">
-      <Filter>SpoutSDK</Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{d8376475-7454-4a24-b08a-aac121d3ad6f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons">
+      <UniqueIdentifier>{71834F65-F3A9-211E-73B8-DC85}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxFastFboReader">
+      <UniqueIdentifier>{A035AEAD-53B2-B3AF-BF5A-725C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxFastFboReader\src">
+      <UniqueIdentifier>{1D837022-D1C2-812C-CD8A-F380}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxImageSequenceRecorder">
+      <UniqueIdentifier>{897CE904-3E5E-71B2-4126-2C08}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxImageSequenceRecorder\src">
+      <UniqueIdentifier>{6A7F5284-57D4-5052-B04A-943F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxMovieExporter">
+      <UniqueIdentifier>{D1420A91-EB6D-F9D4-D3F0-DAFF}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxMovieExporter\src">
+      <UniqueIdentifier>{610591A4-2922-9A4C-1711-1F61}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxMovieExporter\libs">
+      <UniqueIdentifier>{B1E536BC-5E9C-EC0F-D4B0-36FB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxMovieExporter\libs\libav">
+      <UniqueIdentifier>{9B30AC77-1000-ED89-E6DD-8EDB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxMovieExporter\libs\libav\include">
+      <UniqueIdentifier>{283F6C3A-BBB8-567E-D64D-7E94}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxMovieExporter\libs\libav\include\libavcodec">
+      <UniqueIdentifier>{1ACA0A4E-D563-AA46-40A2-D3A0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxMovieExporter\libs\libav\include\libavdevice">
+      <UniqueIdentifier>{680EBEA3-BC65-5D3C-ABA8-7719}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxMovieExporter\libs\libav\include\libavfilter">
+      <UniqueIdentifier>{080145A1-5413-52CB-7827-C6D6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxMovieExporter\libs\libav\include\libavformat">
+      <UniqueIdentifier>{87072F59-ABCE-0CF8-E6CF-5642}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxMovieExporter\libs\libav\include\libavutil">
+      <UniqueIdentifier>{A567FC4C-51E3-CEA3-1B1F-6A49}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxMovieExporter\libs\libav\include\libpostproc">
+      <UniqueIdentifier>{05E9408F-3738-26F5-5F34-B3FC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxMovieExporter\libs\libav\include\libswscale">
+      <UniqueIdentifier>{392481A4-0FFB-1902-AD02-9D47}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxOsc">
+      <UniqueIdentifier>{D91DCA33-6E5D-4481-2AEC-9FBB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxOsc\src">
+      <UniqueIdentifier>{B9DD339A-D93D-92A1-0A2F-4B41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxOsc\libs">
+      <UniqueIdentifier>{99ECA1D9-873F-4622-8FC0-FC7B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxOsc\libs\oscpack">
+      <UniqueIdentifier>{D3A98534-1602-4FEF-57A6-6593}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxOsc\libs\oscpack\src">
+      <UniqueIdentifier>{BFB5BB47-98C8-BBCB-3066-1046}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxOsc\libs\oscpack\src\ip">
+      <UniqueIdentifier>{5A029128-EB41-95C5-CBC0-CDED}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxOsc\libs\oscpack\src\ip\win32">
+      <UniqueIdentifier>{79DFDFE2-400B-8654-3675-01A3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxOsc\libs\oscpack\src\osc">
+      <UniqueIdentifier>{EDACB89C-9768-9551-4D41-B590}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SpoutSDK">
+      <UniqueIdentifier>{1bb5b696-3aae-4999-b93e-8846d91aa847}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\ofApp.h">
+      <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="..\SpoutCommon.h">
-      <Filter>SpoutSDK</Filter>
+    <ClInclude Include="src\displayApp.h">
+      <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="..\SpoutCopy.h">
-      <Filter>SpoutSDK</Filter>
+    <ClInclude Include="src\ofApp.h">
+      <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="..\SpoutDirectX.h">
-      <Filter>SpoutSDK</Filter>
+    <ClInclude Include="..\..\..\addons\ofxFastFboReader\src\ofxFastFboReader.h">
+      <Filter>addons\ofxFastFboReader\src</Filter>
     </ClInclude>
-    <ClInclude Include="..\SpoutGLDXinterop.h">
-      <Filter>SpoutSDK</Filter>
+    <ClInclude Include="..\..\..\addons\ofxImageSequenceRecorder\src\ofxImageSequenceRecorder.h">
+      <Filter>addons\ofxImageSequenceRecorder\src</Filter>
     </ClInclude>
-    <ClInclude Include="..\SpoutGLextensions.h">
-      <Filter>SpoutSDK</Filter>
+    <ClInclude Include="..\..\..\addons\ofxMovieExporter\src\ofxMovieExporter.h">
+      <Filter>addons\ofxMovieExporter\src</Filter>
     </ClInclude>
-    <ClInclude Include="..\SpoutMemoryShare.h">
-      <Filter>SpoutSDK</Filter>
+    <ClInclude Include="..\..\..\addons\ofxMovieExporter\libs\libav\include\libavcodec\avcodec.h">
+      <Filter>addons\ofxMovieExporter\libs\libav\include\libavcodec</Filter>
     </ClInclude>
-    <ClInclude Include="..\SpoutReceiver.h">
-      <Filter>SpoutSDK</Filter>
+    <ClInclude Include="..\..\..\addons\ofxMovieExporter\libs\libav\include\libavcodec\avfft.h">
+      <Filter>addons\ofxMovieExporter\libs\libav\include\libavcodec</Filter>
     </ClInclude>
-    <ClInclude Include="..\SpoutSDK.h">
-      <Filter>SpoutSDK</Filter>
+    <ClInclude Include="..\..\..\addons\ofxMovieExporter\libs\libav\include\libavcodec\dxva2.h">
+      <Filter>addons\ofxMovieExporter\libs\libav\include\libavcodec</Filter>
     </ClInclude>
-    <ClInclude Include="..\SpoutSender.h">
-      <Filter>SpoutSDK</Filter>
+    <ClInclude Include="..\..\..\addons\ofxMovieExporter\libs\libav\include\libavcodec\opt.h">
+      <Filter>addons\ofxMovieExporter\libs\libav\include\libavcodec</Filter>
     </ClInclude>
-    <ClInclude Include="..\SpoutSenderNames.h">
-      <Filter>SpoutSDK</Filter>
+    <ClInclude Include="..\..\..\addons\ofxMovieExporter\libs\libav\include\libavcodec\vaapi.h">
+      <Filter>addons\ofxMovieExporter\libs\libav\include\libavcodec</Filter>
     </ClInclude>
-    <ClInclude Include="..\SpoutSharedMemory.h">
-      <Filter>SpoutSDK</Filter>
+    <ClInclude Include="..\..\..\addons\ofxMovieExporter\libs\libav\include\libavcodec\vdpau.h">
+      <Filter>addons\ofxMovieExporter\libs\libav\include\libavcodec</Filter>
     </ClInclude>
-    <ClInclude Include="resource.h" />
-    <ClInclude Include="src\displayApp.h" />
+    <ClInclude Include="..\..\..\addons\ofxMovieExporter\libs\libav\include\libavcodec\version.h">
+      <Filter>addons\ofxMovieExporter\libs\libav\include\libavcodec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxMovieExporter\libs\libav\include\libavcodec\xvmc.h">
+      <Filter>addons\ofxMovieExporter\libs\libav\include\libavcodec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxMovieExporter\libs\libav\include\libavdevice\avdevice.h">
+      <Filter>addons\ofxMovieExporter\libs\libav\include\libavdevice</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxMovieExporter\libs\libav\include\libavfilter\avcodec.h">
+      <Filter>addons\ofxMovieExporter\libs\libav\include\libavfilter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxMovieExporter\libs\libav\include\libavfilter\avfilter.h">
+      <Filter>addons\ofxMovieExporter\libs\libav\include\libavfilter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxMovieExporter\libs\libav\include\libavfilter\avfiltergraph.h">
+      <Filter>addons\ofxMovieExporter\libs\libav\include\libavfilter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxMovieExporter\libs\libav\include\libavfilter\vsink_buffer.h">
+      <Filter>addons\ofxMovieExporter\libs\libav\include\libavfilter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxMovieExporter\libs\libav\include\libavfilter\vsrc_buffer.h">
+      <Filter>addons\ofxMovieExporter\libs\libav\include\libavfilter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxMovieExporter\libs\libav\include\libavformat\avformat.h">
+      <Filter>addons\ofxMovieExporter\libs\libav\include\libavformat</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxMovieExporter\libs\libav\include\libavformat\avio.h">
+      <Filter>addons\ofxMovieExporter\libs\libav\include\libavformat</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxMovieExporter\libs\libav\include\libavformat\version.h">
+      <Filter>addons\ofxMovieExporter\libs\libav\include\libavformat</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxMovieExporter\libs\libav\include\libavutil\adler32.h">
+      <Filter>addons\ofxMovieExporter\libs\libav\include\libavutil</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxMovieExporter\libs\libav\include\libavutil\aes.h">
+      <Filter>addons\ofxMovieExporter\libs\libav\include\libavutil</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxMovieExporter\libs\libav\include\libavutil\attributes.h">
+      <Filter>addons\ofxMovieExporter\libs\libav\include\libavutil</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxMovieExporter\libs\libav\include\libavutil\audioconvert.h">
+      <Filter>addons\ofxMovieExporter\libs\libav\include\libavutil</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxMovieExporter\libs\libav\include\libavutil\avassert.h">
+      <Filter>addons\ofxMovieExporter\libs\libav\include\libavutil</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxMovieExporter\libs\libav\include\libavutil\avconfig.h">
+      <Filter>addons\ofxMovieExporter\libs\libav\include\libavutil</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxMovieExporter\libs\libav\include\libavutil\avstring.h">
+      <Filter>addons\ofxMovieExporter\libs\libav\include\libavutil</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxMovieExporter\libs\libav\include\libavutil\avutil.h">
+      <Filter>addons\ofxMovieExporter\libs\libav\include\libavutil</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxMovieExporter\libs\libav\include\libavutil\base64.h">
+      <Filter>addons\ofxMovieExporter\libs\libav\include\libavutil</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxMovieExporter\libs\libav\include\libavutil\bswap.h">
+      <Filter>addons\ofxMovieExporter\libs\libav\include\libavutil</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxMovieExporter\libs\libav\include\libavutil\common.h">
+      <Filter>addons\ofxMovieExporter\libs\libav\include\libavutil</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxMovieExporter\libs\libav\include\libavutil\cpu.h">
+      <Filter>addons\ofxMovieExporter\libs\libav\include\libavutil</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxMovieExporter\libs\libav\include\libavutil\crc.h">
+      <Filter>addons\ofxMovieExporter\libs\libav\include\libavutil</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxMovieExporter\libs\libav\include\libavutil\dict.h">
+      <Filter>addons\ofxMovieExporter\libs\libav\include\libavutil</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxMovieExporter\libs\libav\include\libavutil\error.h">
+      <Filter>addons\ofxMovieExporter\libs\libav\include\libavutil</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxMovieExporter\libs\libav\include\libavutil\eval.h">
+      <Filter>addons\ofxMovieExporter\libs\libav\include\libavutil</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxMovieExporter\libs\libav\include\libavutil\fifo.h">
+      <Filter>addons\ofxMovieExporter\libs\libav\include\libavutil</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxMovieExporter\libs\libav\include\libavutil\file.h">
+      <Filter>addons\ofxMovieExporter\libs\libav\include\libavutil</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxMovieExporter\libs\libav\include\libavutil\imgutils.h">
+      <Filter>addons\ofxMovieExporter\libs\libav\include\libavutil</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxMovieExporter\libs\libav\include\libavutil\intfloat_readwrite.h">
+      <Filter>addons\ofxMovieExporter\libs\libav\include\libavutil</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxMovieExporter\libs\libav\include\libavutil\intreadwrite.h">
+      <Filter>addons\ofxMovieExporter\libs\libav\include\libavutil</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxMovieExporter\libs\libav\include\libavutil\lfg.h">
+      <Filter>addons\ofxMovieExporter\libs\libav\include\libavutil</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxMovieExporter\libs\libav\include\libavutil\log.h">
+      <Filter>addons\ofxMovieExporter\libs\libav\include\libavutil</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxMovieExporter\libs\libav\include\libavutil\lzo.h">
+      <Filter>addons\ofxMovieExporter\libs\libav\include\libavutil</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxMovieExporter\libs\libav\include\libavutil\mathematics.h">
+      <Filter>addons\ofxMovieExporter\libs\libav\include\libavutil</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxMovieExporter\libs\libav\include\libavutil\md5.h">
+      <Filter>addons\ofxMovieExporter\libs\libav\include\libavutil</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxMovieExporter\libs\libav\include\libavutil\mem.h">
+      <Filter>addons\ofxMovieExporter\libs\libav\include\libavutil</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxMovieExporter\libs\libav\include\libavutil\opt.h">
+      <Filter>addons\ofxMovieExporter\libs\libav\include\libavutil</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxMovieExporter\libs\libav\include\libavutil\parseutils.h">
+      <Filter>addons\ofxMovieExporter\libs\libav\include\libavutil</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxMovieExporter\libs\libav\include\libavutil\pixdesc.h">
+      <Filter>addons\ofxMovieExporter\libs\libav\include\libavutil</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxMovieExporter\libs\libav\include\libavutil\pixfmt.h">
+      <Filter>addons\ofxMovieExporter\libs\libav\include\libavutil</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxMovieExporter\libs\libav\include\libavutil\random_seed.h">
+      <Filter>addons\ofxMovieExporter\libs\libav\include\libavutil</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxMovieExporter\libs\libav\include\libavutil\rational.h">
+      <Filter>addons\ofxMovieExporter\libs\libav\include\libavutil</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxMovieExporter\libs\libav\include\libavutil\samplefmt.h">
+      <Filter>addons\ofxMovieExporter\libs\libav\include\libavutil</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxMovieExporter\libs\libav\include\libavutil\sha.h">
+      <Filter>addons\ofxMovieExporter\libs\libav\include\libavutil</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxMovieExporter\libs\libav\include\libpostproc\postprocess.h">
+      <Filter>addons\ofxMovieExporter\libs\libav\include\libpostproc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxMovieExporter\libs\libav\include\libswscale\swscale.h">
+      <Filter>addons\ofxMovieExporter\libs\libav\include\libswscale</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\addons\ofxOsc\src\ofxOsc.h">
       <Filter>addons\ofxOsc\src</Filter>
     </ClInclude>
@@ -171,40 +413,44 @@
     <ClInclude Include="..\..\..\addons\ofxOsc\libs\oscpack\src\osc\OscTypes.h">
       <Filter>addons\ofxOsc\libs\oscpack\src\osc</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\SpoutSDK\Spout.h">
+      <Filter>SpoutSDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\SpoutSDK\SpoutCommon.h">
+      <Filter>SpoutSDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\SpoutSDK\SpoutCopy.h">
+      <Filter>SpoutSDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\SpoutSDK\SpoutDirectX.h">
+      <Filter>SpoutSDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\SpoutSDK\SpoutGLDXinterop.h">
+      <Filter>SpoutSDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\SpoutSDK\SpoutGLextensions.h">
+      <Filter>SpoutSDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\SpoutSDK\SpoutMemoryShare.h">
+      <Filter>SpoutSDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\SpoutSDK\SpoutReceiver.h">
+      <Filter>SpoutSDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\SpoutSDK\SpoutSDK.h">
+      <Filter>SpoutSDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\SpoutSDK\SpoutSender.h">
+      <Filter>SpoutSDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\SpoutSDK\SpoutSenderNames.h">
+      <Filter>SpoutSDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\SpoutSDK\SpoutSharedMemory.h">
+      <Filter>SpoutSDK</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="SpoutSDK">
-      <UniqueIdentifier>{40684720-d5f5-4b90-bdcb-c8ae275b33ec}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="addons">
-      <UniqueIdentifier>{a5cc224e-a6a8-41c3-b53d-b5a11bfcba43}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="addons\ofxOsc">
-      <UniqueIdentifier>{fa33583c-eab2-43e3-8151-db2f1bcbf710}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="addons\ofxOsc\src">
-      <UniqueIdentifier>{23e8bc8a-0c7b-4949-88cd-14f185eb4535}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="addons\ofxOsc\libs">
-      <UniqueIdentifier>{14df9e77-0b54-4d33-bd16-b742630e326f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="addons\ofxOsc\libs\oscpack">
-      <UniqueIdentifier>{077353ee-8039-407d-bf2c-8f02d086e56c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="addons\ofxOsc\libs\oscpack\src">
-      <UniqueIdentifier>{c9dfc00d-244f-4221-beaf-52a893240487}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="addons\ofxOsc\libs\oscpack\src\ip">
-      <UniqueIdentifier>{0cf201b5-e97c-4fac-8eaf-558152a1b4ad}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="addons\ofxOsc\libs\oscpack\src\ip\win32">
-      <UniqueIdentifier>{8a0c7377-2fde-464f-af44-741c21fd61ae}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="addons\ofxOsc\libs\oscpack\src\osc">
-      <UniqueIdentifier>{00954120-1c73-4f29-8b5c-09f3ff8455ac}</UniqueIdentifier>
-    </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="ofSpoutExample.rc" />
+    <ResourceCompile Include="icon.rc" />
   </ItemGroup>
 </Project>

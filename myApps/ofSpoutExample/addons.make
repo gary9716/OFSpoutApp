@@ -1,1 +1,4 @@
+ofxFastFboReader
+ofxImageSequenceRecorder
+ofxMovieExporter
 ofxOsc

@@ -23,6 +23,9 @@
 #include "ofMain.h"
 #include "..\..\..\SpoutSDK\Spout.h" // Spout SDK
 #include "ofxOsc.h"
+#include "ofxMovieExporter.h"
+#include "ofxFastFboReader.h"
+#include "ofxImageSequenceRecorder.h"
 
 class ofApp : public ofBaseApp{
 	public:
@@ -59,13 +62,20 @@ class ofApp : public ofBaseApp{
 		bool showMonitorIndex = true;
 		bool enableSenderSelector = false;
 		bool enableKeyCtrl = false;
-
+		const int textureFormat = GL_RGB;
+		ofImageType fboImgType = OF_IMAGE_COLOR;
 		void onOSCMessageReceived(ofxOscMessage &msg);
 
 	private:
 		void setAllWindowsForeground();
 		void setAllWindowsBackground();
 		ofxOscReceiver oscReceiver;
+		Apex::ofxMovieExporter movieExporter;
+		bool recordingSrcSet = false;
+		ofPixels pixelBuff;
+		ofxFastFboReader fastFboReader;
+		ofxImageSequenceRecorder recorder;
 		int oscPort = 10000;
-	
+		
+		bool isRecording = false;
 };
