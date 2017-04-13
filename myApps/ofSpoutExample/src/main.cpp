@@ -63,7 +63,10 @@ int main() { // Properties > Linker > System > Subsystem, set the field to "Wind
 //int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd) { // Properties > Linker > System > Subsystem, set the field to "Windows (/SUBSYSTEM:WINDOWS)"
 	
 	string workDirPath = outputWorkingDir();
-	ifstream myfile("params.txt");
+	string paramFileName = "params.txt";
+	string fullFilePath = workDirPath + "\\..\\" + paramFileName;
+	//cout << "full:" << fullFilePath << endl;
+	ifstream myfile(fullFilePath);
 	string line;
 	vector<int> monitorIndices;
 	vector<int> correspond;
@@ -81,6 +84,9 @@ int main() { // Properties > Linker > System > Subsystem, set the field to "Wind
 			correspond.push_back(stoi(param));
 		}
 		myfile.close();
+	}
+	else {
+		cout << "failed to open file" << endl;
 	}
 
 	int numMonitors = outputMonitorInfo();
@@ -120,6 +126,7 @@ int main() { // Properties > Linker > System > Subsystem, set the field to "Wind
 	ofRunApp(mainWindow, mainApp);
 	
 	if (usingParams) {
+		cout << "using params" << endl;
 		for (int i = 1; i < numParams; i++) {
 			settings.monitor = monitorIndices[i]; //the index in monitors
 			partIndex = correspond[i];
@@ -131,6 +138,7 @@ int main() { // Properties > Linker > System > Subsystem, set the field to "Wind
 		}
 	}
 	else {
+		cout << "not using params" << endl;
 		for (int i = 1; i < numMonitors; i++) {
 			settings.monitor = i; //the index in monitors
 			partIndex = settings.monitor;
