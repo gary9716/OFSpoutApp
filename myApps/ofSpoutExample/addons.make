@@ -1,4 +1,1 @@
-ofxFastFboReader
-ofxImageSequenceRecorder
-ofxMovieExporter
 ofxOsc
