@@ -2,6 +2,7 @@
 #include "ofApp.h"
 #include "displayApp.h"
 
+
 /*
 	=========================================================================
 	This program is free software: you can redistribute it and/or modify
@@ -30,6 +31,16 @@
 // Click APPLY and OK. Then make changes to Main as below
 //--------------------------------------------------------------
 
+void DumpDevice(const DISPLAY_DEVICE& dd, size_t nSpaceCount)
+{
+	printf("%*sDevice Name: %s\n", nSpaceCount, "", dd.DeviceName);
+	printf("%*sDevice String: %s\n", nSpaceCount, "", dd.DeviceString);
+	printf("%*sState Flags: %x\n", nSpaceCount, "", dd.StateFlags);
+	printf("%*sDeviceID: %s\n", nSpaceCount, "", dd.DeviceID);
+	printf("%*sDeviceKey: ...%s\n\n", nSpaceCount, "", dd.DeviceKey + 42);
+}
+
+
 int outputMonitorInfo() {
 	ofAppGLFWWindow ofGLFWWin;
 	ofGLFWWin.listMonitors();
@@ -37,9 +48,32 @@ int outputMonitorInfo() {
 	int count = 0;
 	GLFWmonitor** monitors = glfwGetMonitors(&count);
 	cout << "num monitors:" << count << endl;
+	
+	//using native windows api for outputing monitor info
+	/*
+	DISPLAY_DEVICE dd;
 
+	dd.cb = sizeof(DISPLAY_DEVICE);
+
+	DWORD deviceNum = 0;
+	while (EnumDisplayDevices(NULL, deviceNum, &dd, 0)) {
+		DumpDevice(dd, 0);
+		DISPLAY_DEVICE newdd = { 0 };
+		newdd.cb = sizeof(DISPLAY_DEVICE);
+		DWORD monitorNum = 0;
+		while (EnumDisplayDevices(dd.DeviceName, monitorNum, &newdd, 0))
+		{
+			DumpDevice(newdd, 4);
+			monitorNum++;
+		}
+		puts("");
+		deviceNum++;
+	}
+	*/
+	
 	return count;
 }
+
 
 
 string outputWorkingDir() {
@@ -94,6 +128,7 @@ int main() { // Properties > Linker > System > Subsystem, set the field to "Wind
 	if (numMonitors == 0)
 		return -1;
 	
+
 	int numParams = monitorIndices.capacity();
 	if (correspond.capacity() == monitorIndices.capacity() && numParams > 0)
 		usingParams = true;
@@ -150,14 +185,18 @@ int main() { // Properties > Linker > System > Subsystem, set the field to "Wind
 		}
 	}
 	
-	
-	//make multiple win32 wimdows float without stealing focusing
+	/*
+	int winIndex = 0;
+	MONITORINFO monInfo;
 	for (const auto& win : windows) {
 		HWND win32win = win->getWin32Window();
-		win->hideCursor();
-		ShowWindow(win32win, SW_SHOWNOACTIVATE);
+		HMONITOR hMon = MonitorFromWindow(win32win, MONITOR_DEFAULTTONEAREST);
+		GetMonitorInfo(hMon, &monInfo);
+		winIndex++;
 	}
-
+	*/
+	
+	
 	ofRunMainLoop();
 
 }

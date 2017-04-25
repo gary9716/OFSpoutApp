@@ -62,11 +62,11 @@ void ofApp::onOSCMessageReceived(ofxOscMessage &msg) {
 	if (addr == "winCtrl") {
 		if (message == "show") {
 			cout << "make all windows foreground" << endl;
-			setAllWindowsForeground();
+			setAllWindowsForeground(false);
 		}
 		else if (message == "hide") {
 			cout << "hide all windows" << endl;
-			setAllWindowsBackground();
+			setAllWindowsBackground(true);
 		}
 	}
 
@@ -159,6 +159,12 @@ void ofApp::draw() {
 			unsigned int startX = (winWidth - overlapPixels) * partIndex;
 			associatedTex.drawSubsection(0, 0, winWidth, winHeight, startX, 0, winWidth, winHeight);
 			
+
+			if (firstTime) {
+				firstTime = false;
+				setAllWindowsForeground(true);
+			}
+
 			// Show what it is receiving
 			if(showDebugInfo) {
 				sprintf(str, "From : [%s], TexSize:(%d x %d), winSize:(%d x %d)", SenderName, g_Width, g_Height, winWidth, winHeight);
@@ -218,28 +224,28 @@ void ofApp::mousePressed(int x, int y, int button){
 void ofApp::keyPressed(int key) {
 	if (enableKeyCtrl) {
 		if (key == OF_KEY_UP)
-			setAllWindowsForeground();
+			setAllWindowsForeground(false);
 		else if (key == OF_KEY_DOWN)
-			setAllWindowsBackground();
+			setAllWindowsBackground(true);
 	}
 }
 
-void ofApp::setAllWindowsForeground() {
+void ofApp::setAllWindowsForeground(bool showCursor) {
 	for (const auto& win : *windows) {
 		HWND win32win = win->getWin32Window();
 		ShowWindow(win32win, SW_SHOWNOACTIVATE);
 	}
 
-	ShowCursor(false);
+	ShowCursor(showCursor);
 }
 
-void ofApp::setAllWindowsBackground() {
+void ofApp::setAllWindowsBackground(bool showCursor) {
 	for (const auto& win : *windows) {
 		HWND win32win = win->getWin32Window();
 		ShowWindow(win32win, SW_HIDE);
 	}
 
-	ShowCursor(true);
+	ShowCursor(showCursor);
 }
 
 

@@ -53,6 +53,8 @@ class ofApp : public ofBaseApp{
 
 		unsigned int overlapPixels = 210;
 
+		bool firstTime = true;
+
 		//debug info
 		bool showFPS = true;
 		bool showDebugInfo = false;
@@ -64,8 +66,8 @@ class ofApp : public ofBaseApp{
 		void onOSCMessageReceived(ofxOscMessage &msg);
 
 	private:
-		void setAllWindowsForeground();
-		void setAllWindowsBackground();
+		void setAllWindowsForeground(bool showCursor);
+		void setAllWindowsBackground(bool showCursor);
 		ofxOscReceiver oscReceiver;
 		bool recordingSrcSet = false;
 		int oscPort = 10000;
