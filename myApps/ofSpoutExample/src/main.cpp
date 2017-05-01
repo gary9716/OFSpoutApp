@@ -2,6 +2,9 @@
 #include "ofApp.h"
 #include "displayApp.h"
 
+#include <iostream>
+#include <string>
+#include <algorithm>
 
 /*
 	=========================================================================
@@ -88,6 +91,14 @@ bool usingParams = false;
 const int texWidth = 15390;
 const int texHeight = 1200;
 
+void trim(string &str) {
+	std::remove(str.begin(), str.end(), ' ');
+	std::remove(str.begin(), str.end(), '\n');
+	std::remove(str.begin(), str.end(), '	');
+	return;
+}
+
+
 // for displaying console ( debugging use )
 //========================================================================
 int main() { // Properties > Linker > System > Subsystem, set the field to "Windows (/SUBSYSTEM:CONSOLE)"
@@ -107,16 +118,32 @@ int main() { // Properties > Linker > System > Subsystem, set the field to "Wind
 	if (myfile.is_open())
 	{
 		getline(myfile, line);
+		trim(line);
 		auto params = ofSplitString(line, ",");
 		for (string param : params) {
 			monitorIndices.push_back(stoi(param));
 		}
-
+		
+		/*
+		for (int parsedIndex : monitorIndices) {
+			cout << "parsed m:" << parsedIndex << endl;
+		}
+		*/
+		
 		getline(myfile, line);
+		trim(line);
 		params = ofSplitString(line, ",");
 		for (string param : params) {
 			correspond.push_back(stoi(param));
 		}
+		
+		/*
+		for (int parsedIndex : correspond) {
+			cout << "parsed c:" << parsedIndex << endl;
+		}
+		*/
+		
+
 		myfile.close();
 	}
 	else {
@@ -155,7 +182,9 @@ int main() { // Properties > Linker > System > Subsystem, set the field to "Wind
 	auto mainWindow = ofCreateWindow(settings);
 	
 	ofFbo* fbo = new ofFbo();
+	assert(fbo != NULL);
 	auto mainApp = make_shared<ofApp>(settings.monitor, partIndex, windows, fbo);
+	assert(mainApp != nullptr);
 	windows.push_back(mainWindow);
 	settings.shareContextWith = mainWindow;
 	ofRunApp(mainWindow, mainApp);
@@ -163,13 +192,23 @@ int main() { // Properties > Linker > System > Subsystem, set the field to "Wind
 	if (usingParams) {
 		cout << "using params" << endl;
 		for (int i = 1; i < numParams; i++) {
-			settings.monitor = monitorIndices[i]; //the index in monitors
+			try {
+				settings.monitor = monitorIndices[i]; //the index in monitors
+				cout << "m:" <<settings.monitor << endl;
+			}
+			catch (const char* message) {
+				std::cout << message << std::endl;
+				return -1;
+			}
 			partIndex = correspond[i];
 
 			auto remainedWindow = ofCreateWindow(settings);
+			assert(remainedWindow != nullptr);
 			auto remainedApp = make_shared<displayApp>(settings.monitor, partIndex, fbo);
+			assert(remainedApp != nullptr);
 			windows.push_back(remainedWindow);
 			ofRunApp(remainedWindow, remainedApp);
+			
 		}
 	}
 	else {
@@ -185,6 +224,8 @@ int main() { // Properties > Linker > System > Subsystem, set the field to "Wind
 		}
 	}
 	
+	cout << "succeed allocating all apps" << endl;
+
 	/*
 	int winIndex = 0;
 	MONITORINFO monInfo;
