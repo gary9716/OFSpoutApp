@@ -20,6 +20,12 @@ void displayApp::draw() {
 	char str[256];
 	ofSetColor(255);
 	
+	if (myFbo == NULL) {
+		cout << "fbo is null!?" << endl;
+		return;
+	}
+
+	
 	if (!myFbo->isAllocated() || !myFbo->isUsingTexture()) {
 	//	sprintf(str, "fbo not allocated yet");
 	//	ofDrawBitmapString(str, 20, 20);
@@ -28,8 +34,15 @@ void displayApp::draw() {
 
 	unsigned int winWidth = ofGetWidth();
 	unsigned int winHeight = ofGetHeight();
-	unsigned int startX = (winWidth - overlapPixels) * partIndex;
-	myFbo->getTextureReference().drawSubsection(0, 0, winWidth, winHeight, startX, 0, winWidth, winHeight);
+	
+	if (usingFormula) {
+		unsigned int startX = (winWidth - overlapPixels) * paramVal;
+		myFbo->getTextureReference().drawSubsection(0, 0, winWidth, winHeight, startX, 0, winWidth, winHeight);
+	}
+	else {
+		myFbo->getTextureReference().drawSubsection(0, 0, winWidth, winHeight, paramVal, 0, winWidth, winHeight);
+	}
+
 
 	if (showMonitorIndex) {
 		ofSetColor(255, 0, 0);

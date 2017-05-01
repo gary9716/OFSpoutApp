@@ -52,8 +52,15 @@ void ofApp::setup(){
 		fboImgType = OF_IMAGE_COLOR_ALPHA;
 	}
 
-	myFbo->allocate(g_Width, g_Height, textureFormat);
+	ClearFBOMemAndAllocate(g_Width, g_Height);
+	
 } // end setup
+
+
+void ofApp::ClearFBOMemAndAllocate(int width, int height) {
+	myFbo->clear();
+	myFbo->allocate(width, height, textureFormat);
+}
 
 void ofApp::onOSCMessageReceived(ofxOscMessage &msg) {
 	string addr = msg.getAddress();
@@ -107,8 +114,9 @@ void ofApp::draw() {
 				// The sender dimensions have changed so update the global width and height
 				g_Width  = width;
 				g_Height = height;
+
 				// Update the local texture to receive the new dimensions
-				myFbo->allocate(g_Width, g_Height, textureFormat);
+				ClearFBOMemAndAllocate(g_Width, g_Height);
 				//cout << "tex width:" << g_Width << ",height:" << g_Height << endl;
 			}
 
@@ -148,17 +156,22 @@ void ofApp::draw() {
 				// Update the global width and height
 				g_Width  = width;
 				g_Height = height;
+				
 				// Update the local texture to receive the new dimensions
-				myFbo->allocate(g_Width, g_Height, textureFormat);
+				ClearFBOMemAndAllocate(g_Width, g_Height);
 				return; // quit for next round
 			}
 
 			//draw partial
 			unsigned int winWidth = ofGetWidth();
 			unsigned int winHeight = ofGetHeight();
-			unsigned int startX = (winWidth - overlapPixels) * partIndex;
-			associatedTex.drawSubsection(0, 0, winWidth, winHeight, startX, 0, winWidth, winHeight);
-			
+			if (usingFormula) {
+				unsigned int startX = (winWidth - overlapPixels) * paramVal;
+				associatedTex.drawSubsection(0, 0, winWidth, winHeight, startX, 0, winWidth, winHeight);
+			}
+			else {
+				associatedTex.drawSubsection(0, 0, winWidth, winHeight, paramVal, 0, winWidth, winHeight);
+			}
 
 			if (firstTime) {
 				firstTime = false;

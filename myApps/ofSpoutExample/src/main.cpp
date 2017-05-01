@@ -95,7 +95,22 @@ void trim(string &str) {
 	std::remove(str.begin(), str.end(), ' ');
 	std::remove(str.begin(), str.end(), '\n');
 	std::remove(str.begin(), str.end(), '	');
+	
 	return;
+}
+
+void PauseAndThenLeave() {
+	system("pause");
+	exit(255);
+}
+
+ofGLFWWindowSettings* createWinSetting(int width, int height) {
+	ofGLFWWindowSettings* settings = new ofGLFWWindowSettings();
+	settings->windowMode = OF_GAME_MODE;
+	settings->width = width;
+	settings->height = height;
+	settings->setPosition(ofVec2f(0, 0));
+	return settings;
 }
 
 
@@ -114,7 +129,12 @@ int main() { // Properties > Linker > System > Subsystem, set the field to "Wind
 	ifstream myfile(fullFilePath);
 	string line;
 	vector<int> monitorIndices;
+	monitorIndices.clear();
 	vector<int> correspond;
+	correspond.clear();
+	bool usingFormula = true;
+	vector<ofVec2f> monitorResolution;
+	int numParams = 0;
 	if (myfile.is_open())
 	{
 		getline(myfile, line);
@@ -124,11 +144,11 @@ int main() { // Properties > Linker > System > Subsystem, set the field to "Wind
 			monitorIndices.push_back(stoi(param));
 		}
 		
-		/*
+		cout << "parsed monitorIndices:" << endl;
 		for (int parsedIndex : monitorIndices) {
-			cout << "parsed m:" << parsedIndex << endl;
+			cout << parsedIndex << ",";
 		}
-		*/
+		cout << endl;
 		
 		getline(myfile, line);
 		trim(line);
@@ -137,12 +157,32 @@ int main() { // Properties > Linker > System > Subsystem, set the field to "Wind
 			correspond.push_back(stoi(param));
 		}
 		
-		/*
+		cout << "parsed corresponds:" << endl;
 		for (int parsedIndex : correspond) {
-			cout << "parsed c:" << parsedIndex << endl;
+			cout << parsedIndex << ",";
 		}
-		*/
+		cout << endl;
 		
+		getline(myfile, line);
+		trim(line);
+		usingFormula = stoi(line) == 1;
+
+		cout << "usingFormula:" << usingFormula << endl;
+
+		numParams = monitorIndices.capacity();
+		if (correspond.capacity() == monitorIndices.capacity() && numParams > 0)
+			usingParams = true;
+
+		if (usingParams) {
+			for (int i = 0; i < numParams; i++) {
+				getline(myfile, line);
+				trim(line);
+				auto params = ofSplitString(line, ",");
+				ofVec2f mSize(stoi(params[0]), stoi(params[1]));
+				cout << "m_i:" << i << ",w:" << mSize.x << ",h:" << mSize.y << endl;
+				monitorResolution.push_back(mSize);
+			}
+		}
 
 		myfile.close();
 	}
@@ -155,56 +195,42 @@ int main() { // Properties > Linker > System > Subsystem, set the field to "Wind
 	if (numMonitors == 0)
 		return -1;
 	
-
-	int numParams = monitorIndices.capacity();
-	if (correspond.capacity() == monitorIndices.capacity() && numParams > 0)
-		usingParams = true;
-
-	ofGLFWWindowSettings settings;
-	settings.windowMode = OF_GAME_MODE;
-	settings.width = 1920;
-	settings.height = 1200;
-	settings.setPosition(ofVec2f(0, 0));
-	
+	ofGLFWWindowSettings* settings = createWinSetting(monitorResolution[0].x, monitorResolution[0].y);
 	vector<shared_ptr<ofAppBaseWindow>> windows;
 	int partIndex = 0;
 
 	if (usingParams) {
-		settings.monitor = monitorIndices[0]; //the index in monitors
+		settings->monitor = monitorIndices[0]; //the index in monitors
 		partIndex = correspond[0];
 	}
 	else {
-		settings.monitor = 0; //the index in monitors
-		partIndex = settings.monitor;
+		settings->monitor = 0; //the index in monitors
+		partIndex = settings->monitor;
 	}
 
+	PauseAndThenLeave();
+
 	//create first window and rest of windows would share the same context with first one
-	auto mainWindow = ofCreateWindow(settings);
+	auto mainWindow = ofCreateWindow(*settings);
 	
 	ofFbo* fbo = new ofFbo();
 	assert(fbo != NULL);
-	auto mainApp = make_shared<ofApp>(settings.monitor, partIndex, windows, fbo);
+	auto mainApp = make_shared<ofApp>(settings->monitor, partIndex, windows, fbo, usingFormula);
 	assert(mainApp != nullptr);
 	windows.push_back(mainWindow);
-	settings.shareContextWith = mainWindow;
+	settings->shareContextWith = mainWindow;
 	ofRunApp(mainWindow, mainApp);
 	
 	if (usingParams) {
 		cout << "using params" << endl;
 		for (int i = 1; i < numParams; i++) {
-			try {
-				settings.monitor = monitorIndices[i]; //the index in monitors
-				cout << "m:" <<settings.monitor << endl;
-			}
-			catch (const char* message) {
-				std::cout << message << std::endl;
-				return -1;
-			}
+			settings = createWinSetting(monitorResolution[i].x, monitorResolution[i].y);
+			settings->monitor = monitorIndices[i]; //the index in monitors
 			partIndex = correspond[i];
 
-			auto remainedWindow = ofCreateWindow(settings);
+			auto remainedWindow = ofCreateWindow(*settings);
 			assert(remainedWindow != nullptr);
-			auto remainedApp = make_shared<displayApp>(settings.monitor, partIndex, fbo);
+			auto remainedApp = make_shared<displayApp>(settings->monitor, partIndex, fbo, usingFormula);
 			assert(remainedApp != nullptr);
 			windows.push_back(remainedWindow);
 			ofRunApp(remainedWindow, remainedApp);
@@ -214,11 +240,12 @@ int main() { // Properties > Linker > System > Subsystem, set the field to "Wind
 	else {
 		cout << "not using params" << endl;
 		for (int i = 1; i < numMonitors; i++) {
-			settings.monitor = i; //the index in monitors
-			partIndex = settings.monitor;
+			settings = createWinSetting(1920, 1200);
+			settings->monitor = i; //the index in monitors
+			partIndex = settings->monitor;
 
-			auto remainedWindow = ofCreateWindow(settings);
-			auto remainedApp = make_shared<displayApp>(settings.monitor, partIndex, fbo);
+			auto remainedWindow = ofCreateWindow(*settings);
+			auto remainedApp = make_shared<displayApp>(settings->monitor, partIndex, fbo, usingFormula);
 			windows.push_back(remainedWindow);
 			ofRunApp(remainedWindow, remainedApp);
 		}

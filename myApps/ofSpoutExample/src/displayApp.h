@@ -14,16 +14,17 @@ public:
 	bool bInitialized;		     // Initialization result
 	ofFbo* myFbo;	     // Texture used for texture share transfers
 	int g_Width, g_Height;       // Used for checking sender size change
-	int partIndex = 0;
+	int paramVal = 0;
 	int monitorIndex = -1;
-	displayApp(int monitorIndex , int partIndex, ofFbo* sharedFbo) {
+	displayApp(int monitorIndex , int value, ofFbo* sharedFbo, bool usingFormula) {
 		this->monitorIndex = monitorIndex;
-		this->partIndex = partIndex;
+		this->paramVal = value;
 		this->myFbo = sharedFbo;
+		this->usingFormula = usingFormula;
 	}
 
 	unsigned int overlapPixels = 210;
 	bool showMonitorIndex = true;
-
+	bool usingFormula = true;
 };
 
