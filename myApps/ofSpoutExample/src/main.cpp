@@ -208,7 +208,7 @@ int main() { // Properties > Linker > System > Subsystem, set the field to "Wind
 		partIndex = settings->monitor;
 	}
 
-	PauseAndThenLeave();
+	//PauseAndThenLeave();
 
 	//create first window and rest of windows would share the same context with first one
 	auto mainWindow = ofCreateWindow(*settings);
@@ -226,6 +226,7 @@ int main() { // Properties > Linker > System > Subsystem, set the field to "Wind
 		for (int i = 1; i < numParams; i++) {
 			settings = createWinSetting(monitorResolution[i].x, monitorResolution[i].y);
 			settings->monitor = monitorIndices[i]; //the index in monitors
+			settings->shareContextWith = mainWindow;
 			partIndex = correspond[i];
 
 			auto remainedWindow = ofCreateWindow(*settings);
