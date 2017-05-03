@@ -38,29 +38,24 @@ void ofApp::setup(){
 	
 	ofSetWindowTitle("OF Spout Receiver and OSC Receiver"); // Set the window title to show that it is a Spout Receiver
 	bInitialized  = false; // Spout receiver initialization
-	SenderName[0] = 0; // the name will be filled when the receiver connects to a sender
 	
-	// Allocate a texture for shared texture transfers
-	// An openFrameWorks texture is used so that it can be drawn.
-	g_Width = ofGetWidth();
-	g_Height = ofGetHeight();
+	winWidth = ofGetWidth();
+	winHeight = ofGetHeight();
 
-	if (textureFormat == GL_RGB) {
+	g_Width = winWidth;
+	g_Height = winHeight;
+
+	//cout << "winSize w:" << winWidth << ",h:" << winHeight << endl;
+
+	if (defaultFormat == GL_RGB) {
 		fboImgType = OF_IMAGE_COLOR;
 	}
-	else if (textureFormat == GL_RGBA) {
+	else if (defaultFormat == GL_RGBA) {
 		fboImgType = OF_IMAGE_COLOR_ALPHA;
 	}
 
-	ClearFBOMemAndAllocate(g_Width, g_Height);
-	
 } // end setup
 
-
-void ofApp::ClearFBOMemAndAllocate(int width, int height) {
-	myFbo->clear();
-	myFbo->allocate(width, height, textureFormat);
-}
 
 void ofApp::onOSCMessageReceived(ofxOscMessage &msg) {
 	string addr = msg.getAddress();
@@ -89,18 +84,161 @@ void ofApp::update() {
 	}
 }
 
+
+enum SpoutShareMode {
+	Tex = 0,
+	CPU = 1,
+	Mem = 2
+};
+
+//using GUI app to adjust is better.(SpoutDXmode)
 void ofApp::configSpout() {
-	spoutreceiver.SetCPUmode(false);
-	spoutreceiver.SetMemoryShareMode(true);
+	spoutreceiver.SetShareMode(Tex);
+	spoutreceiver.SetDX9compatible(true);
 }
 
-//--------------------------------------------------------------
-void ofApp::draw() {
 
+bool ofApp::initReceiver(string channelName) {
+	
+	//name provided, so let's use it
+	char mutableName[256];
+	strncpy(mutableName, channelName.c_str(), 256);
+	unsigned int mutableWidth, mutableHeight;
+
+	spoutreceiver.ReleaseReceiver();
+
+	if (!spoutreceiver.CreateReceiver(mutableName, mutableWidth, mutableHeight, channelName.empty())) {
+		if (!channelName.empty())
+			cout << "cannot connect with sender:" << channelName << endl;
+		bInitialized = false;
+		return false;
+	}
+
+	//cout << "sender connected:" << channelName << endl;
+
+	bInitialized = true;
+
+	strncpy(SenderName, mutableName, 256);
+	this->g_Width = mutableWidth;
+	this->g_Height = mutableHeight;
+
+	allocateTex(*shareTex);
+
+	return true;
+
+	/*
+	try {
+		
+	}
+	catch (const char * e) {
+		ofLogError("ofxSpout::Sender::init") << "Channel : " << channelName << " : " << e;
+		bInitialized = false;
+		return false;
+	}
+	*/
+	
+}
+
+bool ofApp::initReceiver() {
+
+	unsigned int mutableWidth, mutableHeight;
+	
+	SenderName[0] = 0;
+	
+	spoutreceiver.ReleaseReceiver();
+
+	if (!spoutreceiver.CreateReceiver(SenderName, mutableWidth, mutableHeight, true)) {
+		if (!channelName.empty())
+			cout << "cannot connect with sender:" << channelName << endl;
+		bInitialized = false;
+		return false;
+	}
+
+	bInitialized = true;
+	this->g_Width = mutableWidth;
+	this->g_Height = mutableHeight;
+
+	allocateTex(*shareTex);
+
+}
+
+
+void ofApp::allocateTex(ofTexture& texture) {
+	//check if the texture is allocated correctly, if not, allocate it
+	if (texture.getWidth() != this->g_Width || texture.getHeight() != this->g_Height) {
+		int format = texture.isAllocated() ? texture.getTextureData().glInternalFormat : this->defaultFormat;
+		texture.allocate(g_Width, g_Height, format);
+		//cout << "allocated, w:" << g_Width << "," << g_Height << endl;
+	}
+}
+
+
+bool ofApp::receive(ofTexture & texture) {
+	
+	//prepare the channel name, allow it to be changed if different channels are available
+	unsigned int mutableWidth, mutableHeight;
+
+	//pull data into the texture (keep any existing fbo attachments)
+	//GLint drawFboId = 0;
+	//glGetIntegerv(GL_DRAW_FRAMEBUFFER_BINDING, &drawFboId);
+	
+	if (!spoutreceiver.ReceiveTexture(SenderName, mutableWidth, mutableHeight, texture.getTextureData().textureID, texture.getTextureData().textureTarget)) {
+		cout << "failed to receive texture" << endl;
+		return false;
+	}
+
+	//update our local settings incase anything changed
+	this->g_Width = mutableWidth;
+	this->g_Height = mutableHeight;
+
+	return true;
+
+	/*
+	try {
+		
+	}
+	catch (const char * e) {
+		ofLogError("ofxSpout::Receiver::receive") << e;
+		return false;
+	}
+	*/
+	
+}
+
+void ofApp::drawTex(ofTexture& tex) {
+
+	if (usingFormula) {
+		unsigned int startX = (winWidth - overlapPixels) * paramVal;
+		tex.drawSubsection(0, 0, winWidth, winHeight, startX, 0, winWidth, winHeight);
+	}
+	else {
+		tex.drawSubsection(0, 0, winWidth, winHeight, paramVal, 0, winWidth, winHeight);
+	}
+
+	/*
+	try {
+	//draw partial
+
+
+	}
+	catch (const char * e) {
+	ofLogError("drawTex:") << e;
+	}
+	*/
+
+}
+
+
+//old way
+
+void ofApp::ClearFBOMemAndAllocate(int width, int height) {
+	myFbo->clear();
+	myFbo->allocate(width, height, defaultFormat);
+}
+
+void ofApp::oldReceiveTexProcedure() {
 	char str[256];
-	ofSetColor(255);
 	unsigned int width, height;
-
 	// ====== SPOUT =====
 	//
 	// INITIALIZE A RECEIVER
@@ -111,26 +249,25 @@ void ofApp::draw() {
 	// If the receiver does not find any senders the initialization will fail
 	// and "CreateReceiver" can be called repeatedly until a sender is found.
 	// "CreateReceiver" will update the passed name, and dimensions.
-	if(!bInitialized) {
-		// Create the receiver and specify true to attempt to connect to the active sender
-		if(spoutreceiver.CreateReceiver(SenderName, width, height, true)) {
-			// Is the size of the detected sender different ?
-			if(width != g_Width || height != g_Height ) {
-				// The sender dimensions have changed so update the global width and height
-				g_Width  = width;
-				g_Height = height;
 
-				// Update the local texture to receive the new dimensions
-				ClearFBOMemAndAllocate(g_Width, g_Height);
-				//cout << "tex width:" << g_Width << ",height:" << g_Height << endl;
+	if (!bInitialized) {
+		SenderName[0] = 0; // the name will be filled when the receiver connects to a sender
+
+		// Create the receiver and specify true to attempt to connect to the active sender
+		if (spoutreceiver.CreateReceiver(SenderName, width, height, true)) {
+			// Is the size of the detected sender different ?
+			if (width != g_Width || height != g_Height) {
+				// The sender dimensions have changed so update the global width and height
+				g_Width = width;
+				g_Height = height;
+				
 			}
 			
-			configSpout();
-
+			allocateTex(*shareTex);
 			bInitialized = true;
 
 			return; // quit for next round
-		
+
 		} // receiver was initialized
 		else {
 			sprintf(str, "No sender detected");
@@ -138,65 +275,39 @@ void ofApp::draw() {
 		}
 	} // end initialization
 
-	// The receiver has initialized so OK to draw
-	if(bInitialized) {
+	  // The receiver has initialized so OK to draw
+	if (bInitialized) {
 
 		// Save current global width and height - they will be changed
 		// by ReceiveTexture if the sender changes dimensions
-		width  = g_Width;
+		width = g_Width;
 		height = g_Height;
 
-		/*
-		myFbo->begin();
-		ofClear(255, 255, 255, 0);
-		myFbo->end();
-		*/
-		
-		auto associatedTex = myFbo->getTextureReference();
-		auto associatedTexData = associatedTex.getTextureData();
+		auto associatedTexData = shareTex->getTextureData();
 
 		// Try to receive into the local the texture at the current size
-		if(spoutreceiver.ReceiveTexture(SenderName, width, height, 
+		if (spoutreceiver.ReceiveTexture(SenderName, width, height,
 			associatedTexData.textureID, associatedTexData.textureTarget)) {
 
 			//	If the width and height are changed, the local texture has to be resized.
-			if(width != g_Width || height != g_Height ) {
+			if (width != g_Width || height != g_Height) {
 				// Update the global width and height
-				g_Width  = width;
+				g_Width = width;
 				g_Height = height;
-				
+
 				// Update the local texture to receive the new dimensions
-				ClearFBOMemAndAllocate(g_Width, g_Height);
+				allocateTex(*shareTex);
 				return; // quit for next round
 			}
 
-			//draw partial
-			unsigned int winWidth = ofGetWidth();
-			unsigned int winHeight = ofGetHeight();
-			if (usingFormula) {
-				unsigned int startX = (winWidth - overlapPixels) * paramVal;
-				associatedTex.drawSubsection(0, 0, winWidth, winHeight, startX, 0, winWidth, winHeight);
-			}
-			else {
-				associatedTex.drawSubsection(0, 0, winWidth, winHeight, paramVal, 0, winWidth, winHeight);
-			}
-
-			if (firstTime) {
-				firstTime = false;
-				setAllWindowsForeground(true);
-			}
+			drawTex(*shareTex);
 
 			// Show what it is receiving
-			if(showDebugInfo) {
+			if (showDebugInfo) {
 				sprintf(str, "From : [%s], TexSize:(%d x %d), winSize:(%d x %d)", SenderName, g_Width, g_Height, winWidth, winHeight);
 				ofDrawBitmapString(str, 20, 20);
 			}
-
-			if (enableSenderSelector) {
-				sprintf(str, "RH click select sender");
-				ofDrawBitmapString(str, 15, ofGetHeight() - 20);
-			}
-
+			
 		}
 		else {
 			// A texture read failure might happen if the sender
@@ -206,6 +317,30 @@ void ofApp::draw() {
 			return;
 		}
 	}
+}
+
+
+
+
+//--------------------------------------------------------------
+void ofApp::draw() {
+
+	char str[256];
+	ofSetColor(255);
+	
+	/*
+	if (!bInitialized) {
+		initReceiver();
+		return;
+	}
+	else {
+		if (receive(*shareTex)) {
+			drawTex(*shareTex);
+		}
+	}
+	*/
+	
+	oldReceiveTexProcedure();
 
 	// Show fps
 	if (showFPS) {

@@ -200,10 +200,12 @@ int main() { // Properties > Linker > System > Subsystem, set the field to "Wind
 	int partIndex = 0;
 
 	if (usingParams) {
+		cout << "using params" << endl;
 		settings->monitor = monitorIndices[0]; //the index in monitors
 		partIndex = correspond[0];
 	}
 	else {
+		cout << "not using params" << endl;
 		settings->monitor = 0; //the index in monitors
 		partIndex = settings->monitor;
 	}
@@ -214,15 +216,15 @@ int main() { // Properties > Linker > System > Subsystem, set the field to "Wind
 	auto mainWindow = ofCreateWindow(*settings);
 	
 	ofFbo* fbo = new ofFbo();
-	assert(fbo != NULL);
-	auto mainApp = make_shared<ofApp>(settings->monitor, partIndex, windows, fbo, usingFormula);
-	assert(mainApp != nullptr);
+	ofTexture* shareTex = new ofTexture();
+
+	auto mainApp = make_shared<ofApp>(settings->monitor, partIndex, windows, fbo, shareTex, usingFormula);
 	windows.push_back(mainWindow);
-	settings->shareContextWith = mainWindow;
+	//settings->shareContextWith = mainWindow;
 	ofRunApp(mainWindow, mainApp);
 	
 	if (usingParams) {
-		cout << "using params" << endl;
+		
 		for (int i = 1; i < numParams; i++) {
 			settings = createWinSetting(monitorResolution[i].x, monitorResolution[i].y);
 			settings->monitor = monitorIndices[i]; //the index in monitors
@@ -230,26 +232,27 @@ int main() { // Properties > Linker > System > Subsystem, set the field to "Wind
 			partIndex = correspond[i];
 
 			auto remainedWindow = ofCreateWindow(*settings);
-			assert(remainedWindow != nullptr);
-			auto remainedApp = make_shared<displayApp>(settings->monitor, partIndex, fbo, usingFormula);
-			assert(remainedApp != nullptr);
+			auto remainedApp = make_shared<displayApp>(settings->monitor, partIndex, fbo, shareTex, usingFormula);
 			windows.push_back(remainedWindow);
 			ofRunApp(remainedWindow, remainedApp);
 			
 		}
+
 	}
 	else {
-		cout << "not using params" << endl;
+		
 		for (int i = 1; i < numMonitors; i++) {
 			settings = createWinSetting(1920, 1200);
 			settings->monitor = i; //the index in monitors
+			settings->shareContextWith = mainWindow;
 			partIndex = settings->monitor;
 
 			auto remainedWindow = ofCreateWindow(*settings);
-			auto remainedApp = make_shared<displayApp>(settings->monitor, partIndex, fbo, usingFormula);
+			auto remainedApp = make_shared<displayApp>(settings->monitor, partIndex, fbo, shareTex, usingFormula);
 			windows.push_back(remainedWindow);
 			ofRunApp(remainedWindow, remainedApp);
 		}
+
 	}
 	
 	cout << "succeed allocating all apps" << endl;
