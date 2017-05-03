@@ -62,7 +62,7 @@ class ofApp : public ofBaseApp{
 		bool showMonitorIndex = true;
 		bool enableSenderSelector = false;
 		bool enableKeyCtrl = false;
-		const int textureFormat = GL_RGB;
+		const int textureFormat = GL_RGBA;
 		ofImageType fboImgType = OF_IMAGE_COLOR;
 		void onOSCMessageReceived(ofxOscMessage &msg);
 		bool usingFormula = true;
@@ -71,6 +71,8 @@ class ofApp : public ofBaseApp{
 		void setAllWindowsForeground(bool showCursor);
 		void setAllWindowsBackground(bool showCursor);
 		void ClearFBOMemAndAllocate(int width, int height);
+		void configSpout();
+		
 		ofxOscReceiver oscReceiver;
 		bool recordingSrcSet = false;
 		int oscPort = 10000;

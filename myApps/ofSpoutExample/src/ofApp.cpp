@@ -89,6 +89,11 @@ void ofApp::update() {
 	}
 }
 
+void ofApp::configSpout() {
+	spoutreceiver.SetCPUmode(false);
+	spoutreceiver.SetMemoryShareMode(true);
+}
+
 //--------------------------------------------------------------
 void ofApp::draw() {
 
@@ -119,8 +124,11 @@ void ofApp::draw() {
 				ClearFBOMemAndAllocate(g_Width, g_Height);
 				//cout << "tex width:" << g_Width << ",height:" << g_Height << endl;
 			}
+			
+			configSpout();
 
 			bInitialized = true;
+
 			return; // quit for next round
 		
 		} // receiver was initialized
