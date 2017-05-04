@@ -285,9 +285,12 @@ void ofApp::oldReceiveTexProcedure() {
 
 		auto associatedTexData = shareTex->getTextureData();
 
+		GLint drawFboId = 0;
+		glGetIntegerv(GL_DRAW_FRAMEBUFFER_BINDING, &drawFboId);
+
 		// Try to receive into the local the texture at the current size
 		if (spoutreceiver.ReceiveTexture(SenderName, width, height,
-			associatedTexData.textureID, associatedTexData.textureTarget)) {
+			associatedTexData.textureID, associatedTexData.textureTarget, false, drawFboId)) {
 
 			//	If the width and height are changed, the local texture has to be resized.
 			if (width != g_Width || height != g_Height) {
