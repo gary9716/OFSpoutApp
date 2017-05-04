@@ -40,3 +40,7 @@ if someone has some linking problems caused by "av" related keywords, please fol
 4. click confirm and do Rebuild Solution
 BTW, one should check there is an addon called ofxMovieExporter in your openframeworks directory.
 if not, it can be downloaded from https://github.com/gary9716/ofxMovieExporter-VS2015
+
+if the program is successfully executed, but the screen black out
+please go to [Spout2_Root]\SPOUTDXMODE\ and 
+use the program SpoutDXMode to config share mode to texture mode.
