@@ -135,6 +135,7 @@ int main() { // Properties > Linker > System > Subsystem, set the field to "Wind
 	bool usingFormula = true;
 	vector<ofVec2f> monitorResolution;
 	int numParams = 0;
+	bool pauseAndLeave = false;
 	if (myfile.is_open())
 	{
 		getline(myfile, line);
@@ -168,6 +169,10 @@ int main() { // Properties > Linker > System > Subsystem, set the field to "Wind
 		usingFormula = stoi(line) == 1;
 
 		cout << "usingFormula:" << usingFormula << endl;
+
+		getline(myfile, line);
+		trim(line);
+		pauseAndLeave = stoi(line) == 1;
 
 		numParams = monitorIndices.capacity();
 		if (correspond.capacity() == monitorIndices.capacity() && numParams > 0)
@@ -210,7 +215,8 @@ int main() { // Properties > Linker > System > Subsystem, set the field to "Wind
 		partIndex = settings->monitor;
 	}
 
-	//PauseAndThenLeave();
+	if(pauseAndLeave)
+		PauseAndThenLeave();
 
 	//create first window and rest of windows would share the same context with first one
 	auto mainWindow = ofCreateWindow(*settings);
@@ -255,7 +261,7 @@ int main() { // Properties > Linker > System > Subsystem, set the field to "Wind
 
 	}
 	
-	cout << "succeed allocating all apps" << endl;
+	cout << "succeed allocating all apps, now you can press J in Unity" << endl;
 
 	/*
 	int winIndex = 0;
@@ -267,7 +273,6 @@ int main() { // Properties > Linker > System > Subsystem, set the field to "Wind
 		winIndex++;
 	}
 	*/
-	
 	
 	ofRunMainLoop();
 
