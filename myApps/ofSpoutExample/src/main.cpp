@@ -1,7 +1,7 @@
 #include "ofMain.h"
 #include "ofApp.h"
 #include "displayApp.h"
-
+#include "ofxBezierWarpManager.h"
 
 #include <iostream>
 #include <string>
@@ -247,38 +247,38 @@ int main(int argc,      // Number of strings in array argv
 	if(pauseAndLeave)
 		PauseAndThenLeave();
 
-	ofFbo* fbo = new ofFbo();
+	ofxBezierWarpManager bezManager;
+
+	int numMonitorsToUse = usingParams ? numParams : numMonitors;
+	
+	ofFbo* allFbo = new ofFbo[numMonitorsToUse];
+	for (int i = 0; i < numMonitorsToUse; i++) {
+		float resX = usingParams ? monitorResolution[i].x : 1920;
+		float resY = usingParams ? monitorResolution[i].y : 1200;
+		allFbo[i].allocate(resX, resY);
+	}
+
 	ofTexture* shareTex = new ofTexture();
 
 	//create first window and rest of windows would share the same context with the first one
 	auto mainWindow = ofCreateWindow(*settings);
-	auto mainApp = make_shared<ofApp>(settings->monitor, partIndex, windows, fbo, shareTex, usingFormula, isDebugging, debugMsgSize);
+	auto mainApp = make_shared<ofApp>(settings->monitor, partIndex, windows, &allFbo[0], shareTex, usingFormula, isDebugging, debugMsgSize);
 	windows.push_back(mainWindow);
 	ofRunApp(mainWindow, mainApp);
 	
-	if (usingParams) {
-		
-		for (int i = 1; i < numParams; i++) {
-			settings = createWinSetting(monitorResolution[i].x, monitorResolution[i].y, monitorIndices[i], mainWindow);
-			auto remainedWindow = ofCreateWindow(*settings);
-			auto remainedApp = make_shared<displayApp>(settings->monitor, correspond[i], fbo, shareTex, usingFormula, isDebugging, debugMsgSize);
-			windows.push_back(remainedWindow);
-			ofRunApp(remainedWindow, remainedApp);
-		}
+	for (int i = 1; i < numMonitorsToUse; i++) {
+		float resX = usingParams ? monitorResolution[i].x : 1920;
+		float resY = usingParams ? monitorResolution[i].y : 1200;
+		partIndex = usingParams ? correspond[i] : settings->monitor;
+		int monitorIndex = usingParams ? monitorIndices[i] : i;
 
+		settings = createWinSetting(resX, resY, monitorIndex, mainWindow);
+		auto remainedWindow = ofCreateWindow(*settings);
+		auto remainedApp = make_shared<displayApp>(monitorIndex, partIndex, &allFbo[i], shareTex, usingFormula, isDebugging, debugMsgSize);
+		windows.push_back(remainedWindow);
+		ofRunApp(remainedWindow, remainedApp);
 	}
-	else {
-		
-		for (int i = 1; i < numMonitors; i++) {
-			settings = createWinSetting(1920, 1200, i, mainWindow);
-			auto remainedWindow = ofCreateWindow(*settings);
-			auto remainedApp = make_shared<displayApp>(settings->monitor, settings->monitor, fbo, shareTex, usingFormula, isDebugging, debugMsgSize);
-			windows.push_back(remainedWindow);
-			ofRunApp(remainedWindow, remainedApp);
-		}
 
-	}
-	
 	cout << "succeed allocating all apps, now you can press J in Unity" << endl;
 
 	/*

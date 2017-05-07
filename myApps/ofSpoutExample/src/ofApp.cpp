@@ -112,6 +112,9 @@ void ofApp::drawTex(ofTexture& tex) {
 		return;
 
 	try {
+		if (fbo != nullptr)
+			fbo->begin();
+		
 		//draw partial
 		if (usingFormula) {
 			unsigned int startX = (winWidth - overlapPixels) * paramVal;
@@ -120,6 +123,9 @@ void ofApp::drawTex(ofTexture& tex) {
 		else {
 			tex.drawSubsection(0, 0, winWidth, winHeight, paramVal, 0, winWidth, winHeight);
 		}
+
+		if (fbo != nullptr)
+			fbo->end();
 	}
 	catch (const char * e) {
 		ofLogError("drawTex in ofApp:") << e;

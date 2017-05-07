@@ -34,7 +34,7 @@ class ofApp : public ofBaseApp{
 		void mousePressed(int x, int y, int button);
 		void keyPressed(int key);
 		bool bInitialized;		     // Initialization result
-		ofFbo* fbo;	     
+		ofFbo* fbo = nullptr;	     
 		ofTexture* shareTex; //it would be allocated with huge size and shared among all apps
 
 		char SenderName[256];	     // Sender name used by a receiver

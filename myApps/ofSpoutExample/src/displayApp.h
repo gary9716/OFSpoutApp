@@ -12,7 +12,7 @@ public:
 	void exit();
 	
 	bool bInitialized;		     // Initialization result
-	ofFbo* fbo;	     
+	ofFbo* fbo = nullptr;	     
 	ofTexture* shareTex; //it would be allocated with huge size and shared among all apps
 	
 	int g_Width, g_Height;       // Used for checking sender size change

@@ -95,31 +95,9 @@
       <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);
-src;
-..\..\..\addons\ofxFastFboReader\src;
-..\..\..\addons\ofxImageSequenceRecorder\src;
-..\..\..\addons\ofxMovieExporter\libs;
-..\..\..\addons\ofxMovieExporter\libs\libav;
-..\..\..\addons\ofxMovieExporter\libs\libav\include;
-..\..\..\addons\ofxMovieExporter\libs\libav\include\libavcodec;
-..\..\..\addons\ofxMovieExporter\libs\libav\include\libavdevice;
-..\..\..\addons\ofxMovieExporter\libs\libav\include\libavfilter;
-..\..\..\addons\ofxMovieExporter\libs\libav\include\libavformat;
-..\..\..\addons\ofxMovieExporter\libs\libav\include\libavutil;
-..\..\..\addons\ofxMovieExporter\libs\libav\include\libpostproc;
-..\..\..\addons\ofxMovieExporter\libs\libav\include\libswscale;
-..\..\..\addons\ofxMovieExporter\libs\libav\lib;
-..\..\..\addons\ofxMovieExporter\libs\libav\lib\vs2010;
-..\..\..\addons\ofxMovieExporter\src;
-..\..\..\addons\ofxOsc\libs;
-..\..\..\addons\ofxOsc\libs\oscpack;
-..\..\..\addons\ofxOsc\libs\oscpack\src;
-..\..\..\addons\ofxOsc\libs\oscpack\src\ip;
-..\..\..\addons\ofxOsc\libs\oscpack\src\ip\posix;
-..\..\..\addons\ofxOsc\libs\oscpack\src\ip\win32;
-..\..\..\addons\ofxOsc\libs\oscpack\src\osc;
-..\..\..\addons\ofxOsc\src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);src;..\..\..\addons\ofxFastFboReader\src;..\..\..\addons\ofxImageSequenceRecorder\src;..\..\..\addons\ofxMovieExporter\libs;..\..\..\addons\ofxMovieExporter\libs\libav;..\..\..\addons\ofxMovieExporter\libs\libav\include;..\..\..\addons\ofxMovieExporter\libs\libav\include\libavcodec;..\..\..\addons\ofxMovieExporter\libs\libav\include\libavdevice;..\..\..\addons\ofxMovieExporter\libs\libav\include\libavfilter;..\..\..\addons\ofxMovieExporter\libs\libav\include\libavformat;..\..\..\addons\ofxMovieExporter\libs\libav\include\libavutil;..\..\..\addons\ofxMovieExporter\libs\libav\include\libpostproc;..\..\..\addons\ofxMovieExporter\libs\libav\include\libswscale;..\..\..\addons\ofxMovieExporter\libs\libav\lib;..\..\..\addons\ofxMovieExporter\libs\libav\lib\vs2010;..\..\..\addons\ofxMovieExporter\src;..\..\..\addons\ofxOsc\libs;..\..\..\addons\ofxOsc\libs\oscpack;..\..\..\addons\ofxOsc\libs\oscpack\src;..\..\..\addons\ofxOsc\libs\oscpack\src\ip;..\..\..\addons\ofxOsc\libs\oscpack\src\ip\posix;..\..\..\addons\ofxOsc\libs\oscpack\src\ip\win32;..\..\..\addons\ofxOsc\libs\oscpack\src\osc;..\..\..\addons\ofxOsc\src;C:\Users\KanTei\Documents\of_v0.9.8_vs_release\addons\ofxBezierWarpManager\src;
+C:\Users\KanTei\Documents\of_v0.9.8_vs_release\addons\ofxXmlSettings\src;
+C:\Users\KanTei\Documents\of_v0.9.8_vs_release\addons\ofxXmlSettings\libs</AdditionalIncludeDirectories>
       <CompileAs>CompileAsCpp</CompileAs>
     </ClCompile>
     <Link>
@@ -139,6 +117,9 @@ src;
       <WarningLevel>Level3</WarningLevel>
       <CompileAs>CompileAsCpp</CompileAs>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <AdditionalIncludeDirectories>C:\Users\KanTei\Documents\of_v0.9.8_vs_release\addons\ofxBezierWarpManager\src;
+C:\Users\KanTei\Documents\of_v0.9.8_vs_release\addons\ofxXmlSettings\src;
+C:\Users\KanTei\Documents\of_v0.9.8_vs_release\addons\ofxXmlSettings\libs;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -154,7 +135,9 @@ src;
       <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);src;..\..\..\addons\ofxOsc\libs;..\..\..\addons\ofxOsc\libs\oscpack;..\..\..\addons\ofxOsc\libs\oscpack\src;..\..\..\addons\ofxOsc\libs\oscpack\src\ip;..\..\..\addons\ofxOsc\libs\oscpack\src\ip\posix;..\..\..\addons\ofxOsc\libs\oscpack\src\ip\win32;..\..\..\addons\ofxOsc\libs\oscpack\src\osc;..\..\..\addons\ofxOsc\src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);src;..\..\..\addons\ofxOsc\libs;..\..\..\addons\ofxOsc\libs\oscpack;..\..\..\addons\ofxOsc\libs\oscpack\src;..\..\..\addons\ofxOsc\libs\oscpack\src\ip;..\..\..\addons\ofxOsc\libs\oscpack\src\ip\posix;..\..\..\addons\ofxOsc\libs\oscpack\src\ip\win32;..\..\..\addons\ofxOsc\libs\oscpack\src\osc;..\..\..\addons\ofxOsc\src;C:\Users\KanTei\Documents\of_v0.9.8_vs_release\addons\ofxBezierWarpManager\src;
+C:\Users\KanTei\Documents\of_v0.9.8_vs_release\addons\ofxXmlSettings\src;
+C:\Users\KanTei\Documents\of_v0.9.8_vs_release\addons\ofxXmlSettings\libs</AdditionalIncludeDirectories>
       <CompileAs>CompileAsCpp</CompileAs>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
@@ -176,31 +159,9 @@ src;
       <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);
-src;
-..\..\..\addons\ofxFastFboReader\src;
-..\..\..\addons\ofxImageSequenceRecorder\src;
-..\..\..\addons\ofxMovieExporter\libs;
-..\..\..\addons\ofxMovieExporter\libs\libav;
-..\..\..\addons\ofxMovieExporter\libs\libav\include;
-..\..\..\addons\ofxMovieExporter\libs\libav\include\libavcodec;
-..\..\..\addons\ofxMovieExporter\libs\libav\include\libavdevice;
-..\..\..\addons\ofxMovieExporter\libs\libav\include\libavfilter;
-..\..\..\addons\ofxMovieExporter\libs\libav\include\libavformat;
-..\..\..\addons\ofxMovieExporter\libs\libav\include\libavutil;
-..\..\..\addons\ofxMovieExporter\libs\libav\include\libpostproc;
-..\..\..\addons\ofxMovieExporter\libs\libav\include\libswscale;
-..\..\..\addons\ofxMovieExporter\libs\libav\lib;
-..\..\..\addons\ofxMovieExporter\libs\libav\lib\vs2010;
-..\..\..\addons\ofxMovieExporter\src;
-..\..\..\addons\ofxOsc\libs;
-..\..\..\addons\ofxOsc\libs\oscpack;
-..\..\..\addons\ofxOsc\libs\oscpack\src;
-..\..\..\addons\ofxOsc\libs\oscpack\src\ip;
-..\..\..\addons\ofxOsc\libs\oscpack\src\ip\posix;
-..\..\..\addons\ofxOsc\libs\oscpack\src\ip\win32;
-..\..\..\addons\ofxOsc\libs\oscpack\src\osc;
-..\..\..\addons\ofxOsc\src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);src;..\..\..\addons\ofxFastFboReader\src;..\..\..\addons\ofxImageSequenceRecorder\src;..\..\..\addons\ofxMovieExporter\libs;..\..\..\addons\ofxMovieExporter\libs\libav;..\..\..\addons\ofxMovieExporter\libs\libav\include;..\..\..\addons\ofxMovieExporter\libs\libav\include\libavcodec;..\..\..\addons\ofxMovieExporter\libs\libav\include\libavdevice;..\..\..\addons\ofxMovieExporter\libs\libav\include\libavfilter;..\..\..\addons\ofxMovieExporter\libs\libav\include\libavformat;..\..\..\addons\ofxMovieExporter\libs\libav\include\libavutil;..\..\..\addons\ofxMovieExporter\libs\libav\include\libpostproc;..\..\..\addons\ofxMovieExporter\libs\libav\include\libswscale;..\..\..\addons\ofxMovieExporter\libs\libav\lib;..\..\..\addons\ofxMovieExporter\libs\libav\lib\vs2010;..\..\..\addons\ofxMovieExporter\src;..\..\..\addons\ofxOsc\libs;..\..\..\addons\ofxOsc\libs\oscpack;..\..\..\addons\ofxOsc\libs\oscpack\src;..\..\..\addons\ofxOsc\libs\oscpack\src\ip;..\..\..\addons\ofxOsc\libs\oscpack\src\ip\posix;..\..\..\addons\ofxOsc\libs\oscpack\src\ip\win32;..\..\..\addons\ofxOsc\libs\oscpack\src\osc;..\..\..\addons\ofxOsc\src;C:\Users\KanTei\Documents\of_v0.9.8_vs_release\addons\ofxBezierWarpManager\src;
+C:\Users\KanTei\Documents\of_v0.9.8_vs_release\addons\ofxXmlSettings\src;
+C:\Users\KanTei\Documents\of_v0.9.8_vs_release\addons\ofxXmlSettings\libs</AdditionalIncludeDirectories>
       <CompileAs>CompileAsCpp</CompileAs>
     </ClCompile>
     <Link>
@@ -216,6 +177,12 @@ src;
     <PostBuildEvent />
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\addons\ofxBezierWarpManager\src\ofxBezierWarp.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxBezierWarpManager\src\ofxBezierWarpManager.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxXmlSettings\libs\tinyxml.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxXmlSettings\libs\tinyxmlerror.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxXmlSettings\libs\tinyxmlparser.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxXmlSettings\src\ofxXmlSettings.cpp" />
     <ClCompile Include="..\..\SpoutSDK\SpoutCopy.cpp" />
     <ClCompile Include="..\..\SpoutSDK\SpoutDirectX.cpp" />
     <ClCompile Include="..\..\SpoutSDK\SpoutGLDXinterop.cpp" />
@@ -243,6 +210,10 @@ src;
     <ClCompile Include="..\..\..\addons\ofxOsc\libs\oscpack\src\osc\OscTypes.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\addons\ofxBezierWarpManager\src\ofxBezierWarp.h" />
+    <ClInclude Include="..\..\..\addons\ofxBezierWarpManager\src\ofxBezierWarpManager.h" />
+    <ClInclude Include="..\..\..\addons\ofxXmlSettings\libs\tinyxml.h" />
+    <ClInclude Include="..\..\..\addons\ofxXmlSettings\src\ofxXmlSettings.h" />
     <ClInclude Include="..\..\SpoutSDK\Spout.h" />
     <ClInclude Include="..\..\SpoutSDK\SpoutCommon.h" />
     <ClInclude Include="..\..\SpoutSDK\SpoutCopy.h" />

@@ -82,6 +82,24 @@
     <ClCompile Include="..\..\SpoutSDK\SpoutSharedMemory.cpp">
       <Filter>SpoutSDK</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxBezierWarpManager\src\ofxBezierWarp.cpp">
+      <Filter>addons\ofxBezierWarpManager\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxBezierWarpManager\src\ofxBezierWarpManager.cpp">
+      <Filter>addons\ofxBezierWarpManager\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxXmlSettings\src\ofxXmlSettings.cpp">
+      <Filter>addons\ofxXmlSettings\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxXmlSettings\libs\tinyxml.cpp">
+      <Filter>addons\ofxXmlSettings\libs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxXmlSettings\libs\tinyxmlerror.cpp">
+      <Filter>addons\ofxXmlSettings\libs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxXmlSettings\libs\tinyxmlparser.cpp">
+      <Filter>addons\ofxXmlSettings\libs</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -116,6 +134,21 @@
     </Filter>
     <Filter Include="SpoutSDK">
       <UniqueIdentifier>{1bb5b696-3aae-4999-b93e-8846d91aa847}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxBezierWarpManager">
+      <UniqueIdentifier>{3421b792-89f2-4c5c-ad46-76a3820aeeb7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxBezierWarpManager\src">
+      <UniqueIdentifier>{cb70fe37-39e3-4977-9fea-94f4146a04ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxXmlSettings">
+      <UniqueIdentifier>{73b81575-f56a-492e-a34d-9e0af61330f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxXmlSettings\src">
+      <UniqueIdentifier>{dcffa600-f5db-456a-bdf7-a9128cace2a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxXmlSettings\libs">
+      <UniqueIdentifier>{989182a7-de67-4a47-b243-b5d444284087}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -223,6 +256,18 @@
     </ClInclude>
     <ClInclude Include="..\..\SpoutSDK\SpoutSharedMemory.h">
       <Filter>SpoutSDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxBezierWarpManager\src\ofxBezierWarp.h">
+      <Filter>addons\ofxBezierWarpManager\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxBezierWarpManager\src\ofxBezierWarpManager.h">
+      <Filter>addons\ofxBezierWarpManager\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxXmlSettings\src\ofxXmlSettings.h">
+      <Filter>addons\ofxXmlSettings\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxXmlSettings\libs\tinyxml.h">
+      <Filter>addons\ofxXmlSettings\libs</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
