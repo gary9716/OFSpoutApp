@@ -154,31 +154,7 @@ src;
       <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);
-src;
-..\..\..\addons\ofxFastFboReader\src;
-..\..\..\addons\ofxImageSequenceRecorder\src;
-..\..\..\addons\ofxMovieExporter\libs;
-..\..\..\addons\ofxMovieExporter\libs\libav;
-..\..\..\addons\ofxMovieExporter\libs\libav\include;
-..\..\..\addons\ofxMovieExporter\libs\libav\include\libavcodec;
-..\..\..\addons\ofxMovieExporter\libs\libav\include\libavdevice;
-..\..\..\addons\ofxMovieExporter\libs\libav\include\libavfilter;
-..\..\..\addons\ofxMovieExporter\libs\libav\include\libavformat;
-..\..\..\addons\ofxMovieExporter\libs\libav\include\libavutil;
-..\..\..\addons\ofxMovieExporter\libs\libav\include\libpostproc;
-..\..\..\addons\ofxMovieExporter\libs\libav\include\libswscale;
-..\..\..\addons\ofxMovieExporter\libs\libav\lib;
-..\..\..\addons\ofxMovieExporter\libs\libav\lib\vs2010;
-..\..\..\addons\ofxMovieExporter\src;
-..\..\..\addons\ofxOsc\libs;
-..\..\..\addons\ofxOsc\libs\oscpack;
-..\..\..\addons\ofxOsc\libs\oscpack\src;
-..\..\..\addons\ofxOsc\libs\oscpack\src\ip;
-..\..\..\addons\ofxOsc\libs\oscpack\src\ip\posix;
-..\..\..\addons\ofxOsc\libs\oscpack\src\ip\win32;
-..\..\..\addons\ofxOsc\libs\oscpack\src\osc;
-..\..\..\addons\ofxOsc\src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);src;..\..\..\addons\ofxOsc\libs;..\..\..\addons\ofxOsc\libs\oscpack;..\..\..\addons\ofxOsc\libs\oscpack\src;..\..\..\addons\ofxOsc\libs\oscpack\src\ip;..\..\..\addons\ofxOsc\libs\oscpack\src\ip\posix;..\..\..\addons\ofxOsc\libs\oscpack\src\ip\win32;..\..\..\addons\ofxOsc\libs\oscpack\src\osc;..\..\..\addons\ofxOsc\src</AdditionalIncludeDirectories>
       <CompileAs>CompileAsCpp</CompileAs>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>

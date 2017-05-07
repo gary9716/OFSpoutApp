@@ -4,69 +4,59 @@
 void displayApp::setup() {
 
 	ofBackground(0, 0, 0);
-	ofSetWindowTitle("Display only"); // Set the window title to show that it is a Spout Receiver
+	ofSetWindowTitle("Display only");
 	winWidth = ofGetWidth();
 	winHeight = ofGetHeight();
 
+	font.loadFont("arial.ttf", fontSize);
+
 } // end setup
 
-
-  //--------------------------------------------------------------
+//--------------------------------------------------------------
 void displayApp::update() {
 
-}
-
-void displayApp::oldProcedure() {
-	char str[256];
-
-	if (myFbo == NULL) {
-		cout << "fbo is null!?" << endl;
-		return;
-	}
-
-	if (!myFbo->isAllocated() || !myFbo->isUsingTexture()) {
-		sprintf(str, "fbo not allocated yet");
-		ofDrawBitmapString(str, 20, 20);
-		return;
-	}
-
-	drawTex(myFbo->getTextureReference());
-
-	if (showMonitorIndex) {
-		ofSetColor(255, 0, 0);
-		sprintf(str, "Monitor: %d", monitorIndex);
-		ofDrawBitmapString(str, 20, 40);
-	}
 }
 
 //--------------------------------------------------------------
 void displayApp::draw() {
 	ofSetColor(255);
-	if (shareTex->isAllocated()) {
-		drawTex(*shareTex);
+	drawTex(*shareTex);
+
+	if (showDebugInfo && showMonitorIndex) {
+		ofSetColor(255, 0, 0);
+		sprintf(str, "ParamIndex %d", monitorIndex);
+		drawFromCenter(str, 0, 100);
 	}
 
 }
 
 void displayApp::drawTex(ofTexture& tex) {
-	//draw partial
-	if (usingFormula) {
-		unsigned int startX = (winWidth - overlapPixels) * paramVal;
-		tex.drawSubsection(0, 0, winWidth, winHeight, startX, 0, winWidth, winHeight);
-	}
-	else {
-		tex.drawSubsection(0, 0, winWidth, winHeight, paramVal, 0, winWidth, winHeight);
-	}
-	
-	/*
+	if (!tex.isAllocated())
+		return;
+
 	try {
-		
+		//draw partial
+		if (usingFormula) {
+			unsigned int startX = (winWidth - overlapPixels) * paramVal;
+			tex.drawSubsection(0, 0, winWidth, winHeight, startX, 0, winWidth, winHeight);
+		}
+		else {
+			tex.drawSubsection(0, 0, winWidth, winHeight, paramVal, 0, winWidth, winHeight);
+		}
 	}
 	catch (const char * e) {
-		ofLogError("drawTex:") << e;
+		ofLogError("drawTex in displayApp:") << e;
 	}
-	*/
 	
+}
+
+void displayApp::drawFromCenter(const char* msg, float xOffset = 0, float yOffset = 0) {
+
+	float msgH = font.stringHeight(msg);
+	float msgW = font.stringWidth(msg);
+
+	font.drawString(msg, (winWidth - msgW) / 2 - +xOffset, (winHeight - msgH) / 2 - +yOffset);
+
 }
 
 //--------------------------------------------------------------

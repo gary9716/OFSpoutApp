@@ -2,6 +2,7 @@
 #include "ofApp.h"
 #include "displayApp.h"
 
+
 #include <iostream>
 #include <string>
 #include <algorithm>
@@ -78,7 +79,6 @@ int outputMonitorInfo() {
 }
 
 
-
 string outputWorkingDir() {
 
 	ofFilePath filePath;
@@ -104,29 +104,51 @@ void PauseAndThenLeave() {
 	exit(255);
 }
 
-ofGLFWWindowSettings* createWinSetting(int width, int height) {
+ofGLFWWindowSettings* createWinSetting(int width, int height, int monitorIndex = 0, shared_ptr<ofAppBaseWindow> sharedWin = nullptr) {
 	ofGLFWWindowSettings* settings = new ofGLFWWindowSettings();
 	settings->windowMode = OF_GAME_MODE;
+	settings->monitor = monitorIndex;
 	settings->width = width;
 	settings->height = height;
 	settings->setPosition(ofVec2f(0, 0));
+	settings->shareContextWith = sharedWin;
 	return settings;
 }
 
+int debugFlagIndex = 2;
+bool isDebugging = true;
+int debugMsgSize = 40;
 
 // for displaying console ( debugging use )
 //========================================================================
-int main() { // Properties > Linker > System > Subsystem, set the field to "Windows (/SUBSYSTEM:CONSOLE)"
+int main(int argc,      // Number of strings in array argv  
+	char *argv[],   // Array of command-line argument strings  
+	char *envp[])  // Array of environment variable strings   
+{ // Properties > Linker > System > Subsystem, set the field to "Windows (/SUBSYSTEM:CONSOLE)"
 
 // for hiding console
 //========================================================================
 //int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd) { // Properties > Linker > System > Subsystem, set the field to "Windows (/SUBSYSTEM:WINDOWS)"
 	
+	int count;
+	// Display each command-line argument.  
+	cout << "\nCommand-line arguments:\n";
+	for (count = 0; count < argc; count++)
+		cout << "  argv[" << count << "]   "
+		<< argv[count] << "\n";
+
+	if (argc > 1)
+		isDebugging = stoi(argv[debugFlagIndex]) == 1;
+	else
+		isDebugging = false;
+
 	string workDirPath = outputWorkingDir();
 	string paramFileName = "params.txt";
 	string fullFilePath = workDirPath + "\\..\\" + paramFileName;
 	//cout << "full:" << fullFilePath << endl;
 	ifstream myfile(fullFilePath);
+	
+	//init and declare some local vars
 	string line;
 	vector<int> monitorIndices;
 	monitorIndices.clear();
@@ -136,53 +158,60 @@ int main() { // Properties > Linker > System > Subsystem, set the field to "Wind
 	vector<ofVec2f> monitorResolution;
 	int numParams = 0;
 	bool pauseAndLeave = false;
+	
+	
 	if (myfile.is_open())
 	{
 		getline(myfile, line);
-		trim(line);
-		auto params = ofSplitString(line, ",");
+		auto params = ofSplitString(line, ",", true, true);
 		for (string param : params) {
 			monitorIndices.push_back(stoi(param));
 		}
 		
-		cout << "parsed monitorIndices:" << endl;
+		cout << "number elements:" << monitorIndices.size() << ",monitorIndices:" << endl;
 		for (int parsedIndex : monitorIndices) {
-			cout << parsedIndex << ",";
+			cout << parsedIndex << " ";
 		}
 		cout << endl;
 		
+
+
 		getline(myfile, line);
-		trim(line);
-		params = ofSplitString(line, ",");
+		params = ofSplitString(line, ",", true, true);
 		for (string param : params) {
 			correspond.push_back(stoi(param));
 		}
 		
-		cout << "parsed corresponds:" << endl;
+		cout << "number elements:" << correspond.size() << ",corresponding parts:" << endl;
 		for (int parsedIndex : correspond) {
-			cout << parsedIndex << ",";
+			cout << parsedIndex << " ";
 		}
 		cout << endl;
 		
+
+
 		getline(myfile, line);
 		trim(line);
 		usingFormula = stoi(line) == 1;
 
 		cout << "usingFormula:" << usingFormula << endl;
 
+
+
 		getline(myfile, line);
 		trim(line);
 		pauseAndLeave = stoi(line) == 1;
 
-		numParams = monitorIndices.capacity();
-		if (correspond.capacity() == monitorIndices.capacity() && numParams > 0)
+
+
+		numParams = monitorIndices.size();
+		if (correspond.size() == monitorIndices.size() && numParams > 0)
 			usingParams = true;
 
 		if (usingParams) {
 			for (int i = 0; i < numParams; i++) {
 				getline(myfile, line);
-				trim(line);
-				auto params = ofSplitString(line, ",");
+				auto params = ofSplitString(line, ",", true, true);
 				ofVec2f mSize(stoi(params[0]), stoi(params[1]));
 				cout << "m_i:" << i << ",w:" << mSize.x << ",h:" << mSize.y << endl;
 				monitorResolution.push_back(mSize);
@@ -200,61 +229,50 @@ int main() { // Properties > Linker > System > Subsystem, set the field to "Wind
 	if (numMonitors == 0)
 		return -1;
 	
-	ofGLFWWindowSettings* settings = createWinSetting(monitorResolution[0].x, monitorResolution[0].y);
+	ofGLFWWindowSettings* settings = nullptr;
 	vector<shared_ptr<ofAppBaseWindow>> windows;
 	int partIndex = 0;
 
 	if (usingParams) {
 		cout << "using params" << endl;
-		settings->monitor = monitorIndices[0]; //the index in monitors
+		settings = createWinSetting(monitorResolution[0].x, monitorResolution[0].y, monitorIndices[0]);
 		partIndex = correspond[0];
 	}
 	else {
 		cout << "not using params" << endl;
-		settings->monitor = 0; //the index in monitors
+		settings = createWinSetting(monitorResolution[0].x, monitorResolution[0].y);
 		partIndex = settings->monitor;
 	}
 
 	if(pauseAndLeave)
 		PauseAndThenLeave();
 
-	//create first window and rest of windows would share the same context with first one
-	auto mainWindow = ofCreateWindow(*settings);
-	
 	ofFbo* fbo = new ofFbo();
 	ofTexture* shareTex = new ofTexture();
 
-	auto mainApp = make_shared<ofApp>(settings->monitor, partIndex, windows, fbo, shareTex, usingFormula);
+	//create first window and rest of windows would share the same context with the first one
+	auto mainWindow = ofCreateWindow(*settings);
+	auto mainApp = make_shared<ofApp>(settings->monitor, partIndex, windows, fbo, shareTex, usingFormula, isDebugging, debugMsgSize);
 	windows.push_back(mainWindow);
-	//settings->shareContextWith = mainWindow;
 	ofRunApp(mainWindow, mainApp);
 	
 	if (usingParams) {
 		
 		for (int i = 1; i < numParams; i++) {
-			settings = createWinSetting(monitorResolution[i].x, monitorResolution[i].y);
-			settings->monitor = monitorIndices[i]; //the index in monitors
-			settings->shareContextWith = mainWindow;
-			partIndex = correspond[i];
-
+			settings = createWinSetting(monitorResolution[i].x, monitorResolution[i].y, monitorIndices[i], mainWindow);
 			auto remainedWindow = ofCreateWindow(*settings);
-			auto remainedApp = make_shared<displayApp>(settings->monitor, partIndex, fbo, shareTex, usingFormula);
+			auto remainedApp = make_shared<displayApp>(settings->monitor, correspond[i], fbo, shareTex, usingFormula, isDebugging, debugMsgSize);
 			windows.push_back(remainedWindow);
 			ofRunApp(remainedWindow, remainedApp);
-			
 		}
 
 	}
 	else {
 		
 		for (int i = 1; i < numMonitors; i++) {
-			settings = createWinSetting(1920, 1200);
-			settings->monitor = i; //the index in monitors
-			settings->shareContextWith = mainWindow;
-			partIndex = settings->monitor;
-
+			settings = createWinSetting(1920, 1200, i, mainWindow);
 			auto remainedWindow = ofCreateWindow(*settings);
-			auto remainedApp = make_shared<displayApp>(settings->monitor, partIndex, fbo, shareTex, usingFormula);
+			auto remainedApp = make_shared<displayApp>(settings->monitor, settings->monitor, fbo, shareTex, usingFormula, isDebugging, debugMsgSize);
 			windows.push_back(remainedWindow);
 			ofRunApp(remainedWindow, remainedApp);
 		}
