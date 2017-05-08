@@ -1,7 +1,5 @@
 #include "ofMain.h"
 #include "ofApp.h"
-#include "displayApp.h"
-#include "ofxBezierWarpManager.h"
 
 #include <iostream>
 #include <string>
@@ -88,9 +86,6 @@ string outputWorkingDir() {
 }
 
 bool usingParams = false;
-const int texWidth = 15390;
-const int texHeight = 1200;
-
 void trim(string &str) {
 	std::remove(str.begin(), str.end(), ' ');
 	std::remove(str.begin(), str.end(), '\n');
@@ -151,9 +146,7 @@ int main(int argc,      // Number of strings in array argv
 	//init and declare some local vars
 	string line;
 	vector<int> monitorIndices;
-	monitorIndices.clear();
 	vector<int> correspond;
-	correspond.clear();
 	bool usingFormula = true;
 	vector<ofVec2f> monitorResolution;
 	int numParams = 0;
@@ -167,7 +160,6 @@ int main(int argc,      // Number of strings in array argv
 		for (string param : params) {
 			monitorIndices.push_back(stoi(param));
 		}
-		
 		cout << "number elements:" << monitorIndices.size() << ",monitorIndices:" << endl;
 		for (int parsedIndex : monitorIndices) {
 			cout << parsedIndex << " ";
@@ -181,7 +173,6 @@ int main(int argc,      // Number of strings in array argv
 		for (string param : params) {
 			correspond.push_back(stoi(param));
 		}
-		
 		cout << "number elements:" << correspond.size() << ",corresponding parts:" << endl;
 		for (int parsedIndex : correspond) {
 			cout << parsedIndex << " ";
@@ -193,7 +184,6 @@ int main(int argc,      // Number of strings in array argv
 		getline(myfile, line);
 		trim(line);
 		usingFormula = stoi(line) == 1;
-
 		cout << "usingFormula:" << usingFormula << endl;
 
 
@@ -217,7 +207,7 @@ int main(int argc,      // Number of strings in array argv
 				monitorResolution.push_back(mSize);
 			}
 		}
-
+		
 		myfile.close();
 	}
 	else {
@@ -225,62 +215,41 @@ int main(int argc,      // Number of strings in array argv
 	}
 
 	int numMonitors = outputMonitorInfo();
-	
 	if (numMonitors == 0)
 		return -1;
 	
-	ofGLFWWindowSettings* settings = nullptr;
-	vector<shared_ptr<ofAppBaseWindow>> windows;
-	int partIndex = 0;
-
 	if (usingParams) {
 		cout << "using params" << endl;
-		settings = createWinSetting(monitorResolution[0].x, monitorResolution[0].y, monitorIndices[0]);
-		partIndex = correspond[0];
 	}
 	else {
 		cout << "not using params" << endl;
-		settings = createWinSetting(monitorResolution[0].x, monitorResolution[0].y);
-		partIndex = settings->monitor;
 	}
 
-	if(pauseAndLeave)
+	if (pauseAndLeave)
 		PauseAndThenLeave();
 
-	ofxBezierWarpManager bezManager;
 
+	//if not using parameters, setup with all available(available from API) monitors
+	if (!usingParams) {
+		monitorIndices.clear();
+		correspond.clear();
+		monitorResolution.clear();
+
+		for (int i = 0; i < numMonitors; i++) {
+			monitorIndices.push_back(i);
+			correspond.push_back(i);
+			monitorResolution.push_back(ofPoint(1920, 1200));
+		}
+	}
+
+	auto settings = createWinSetting(monitorResolution[0].x, monitorResolution[0].y, monitorIndices[0]);
 	int numMonitorsToUse = usingParams ? numParams : numMonitors;
 	
-	ofFbo* allFbo = new ofFbo[numMonitorsToUse];
-	for (int i = 0; i < numMonitorsToUse; i++) {
-		float resX = usingParams ? monitorResolution[i].x : 1920;
-		float resY = usingParams ? monitorResolution[i].y : 1200;
-		allFbo[i].allocate(resX, resY);
-	}
-
-	ofTexture* shareTex = new ofTexture();
-
 	//create first window and rest of windows would share the same context with the first one
 	auto mainWindow = ofCreateWindow(*settings);
-	auto mainApp = make_shared<ofApp>(settings->monitor, partIndex, windows, &allFbo[0], shareTex, usingFormula, isDebugging, debugMsgSize);
-	windows.push_back(mainWindow);
+	auto mainApp = make_shared<ofApp>(settings->monitor, correspond[0], usingFormula, isDebugging, debugMsgSize, numMonitorsToUse, monitorResolution, correspond, monitorIndices);
 	ofRunApp(mainWindow, mainApp);
 	
-	for (int i = 1; i < numMonitorsToUse; i++) {
-		float resX = usingParams ? monitorResolution[i].x : 1920;
-		float resY = usingParams ? monitorResolution[i].y : 1200;
-		partIndex = usingParams ? correspond[i] : settings->monitor;
-		int monitorIndex = usingParams ? monitorIndices[i] : i;
-
-		settings = createWinSetting(resX, resY, monitorIndex, mainWindow);
-		auto remainedWindow = ofCreateWindow(*settings);
-		auto remainedApp = make_shared<displayApp>(monitorIndex, partIndex, &allFbo[i], shareTex, usingFormula, isDebugging, debugMsgSize);
-		windows.push_back(remainedWindow);
-		ofRunApp(remainedWindow, remainedApp);
-	}
-
-	cout << "succeed allocating all apps, now you can press J in Unity" << endl;
-
 	/*
 	int winIndex = 0;
 	MONITORINFO monInfo;

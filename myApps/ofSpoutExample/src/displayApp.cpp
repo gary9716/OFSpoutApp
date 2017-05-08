@@ -7,9 +7,11 @@ void displayApp::setup() {
 	ofSetWindowTitle("Display only");
 	winWidth = ofGetWidth();
 	winHeight = ofGetHeight();
+	fbo.allocate(winWidth, winHeight);
+
+	warp = &bezManager->addFbo(&fbo);
 
 	font.loadFont("arial.ttf", fontSize);
-
 } // end setup
 
 //--------------------------------------------------------------
@@ -19,7 +21,7 @@ void displayApp::update() {
 
 //--------------------------------------------------------------
 void displayApp::draw() {
-	ofSetColor(255);
+	ofClear(0);
 	drawTex(*shareTex);
 
 	if (showDebugInfo && showMonitorIndex) {
@@ -35,8 +37,7 @@ void displayApp::drawTex(ofTexture& tex) {
 		return;
 
 	try {
-		if (fbo != nullptr)
-			fbo->begin();
+		fbo.begin();
 		
 		//draw partial
 		if (usingFormula) {
@@ -47,8 +48,8 @@ void displayApp::drawTex(ofTexture& tex) {
 			tex.drawSubsection(0, 0, winWidth, winHeight, paramVal, 0, winWidth, winHeight);
 		}
 		
-		if (fbo != nullptr)
-			fbo->end();
+		fbo.end();
+		warp->draw();
 	}
 	catch (const char * e) {
 		ofLogError("drawTex in displayApp:") << e;
@@ -61,7 +62,7 @@ void displayApp::drawFromCenter(const char* msg, float xOffset = 0, float yOffse
 	float msgH = font.stringHeight(msg);
 	float msgW = font.stringWidth(msg);
 
-	font.drawString(msg, (winWidth - msgW) / 2 - +xOffset, (winHeight - msgH) / 2 - +yOffset);
+	font.drawString(msg, (winWidth - msgW) / 2 + xOffset, (winHeight - msgH) / 2 + yOffset);
 
 }
 

@@ -27,7 +27,7 @@
 	=========================================================================
 */
 #include "ofApp.h"
-
+#include "displayApp.h"
 
 //--------------------------------------------------------------
 void ofApp::setup(){
@@ -40,18 +40,47 @@ void ofApp::setup(){
 
 	winWidth = ofGetWidth();
 	winHeight = ofGetHeight();
+	fbo.allocate(winWidth, winHeight);
+	//cout << "winSize w:" << winWidth << ",h:" << winHeight << endl;
+
+	bezManager.setup(10);
+	warp = &bezManager.addFbo(&fbo);
 
 	g_Width = winWidth;
 	g_Height = winHeight;
 
 	font.loadFont("arial.ttf", fontSize);
-
-	oscReceiver.setup(oscPort);
 	
-	//cout << "winSize w:" << winWidth << ",h:" << winHeight << endl;
+	setupRestOfWindows();
+
+	//connect osc at last. make sure initialization has been done before receiving commands
+	oscReceiver.setup(oscPort);
 
 } // end setup
 
+
+void ofApp::setupRestOfWindows() {
+
+	auto mainWindow = ofGetMainLoop()->getCurrentWindow();
+	windows.push_back(mainWindow);
+
+	//allocate rest of windows dynamically
+	for (int i = 1; i < numMonitorsToUse; i++) {
+		float resX = monitorResolution[i].x;
+		float resY = monitorResolution[i].y;
+		int paramVal = correspond[i];
+		int monitorIndex = monitorIndices[i];
+
+		auto settings = createWinSetting(resX, resY, monitorIndex, mainWindow);
+		auto remainedWindow = ofCreateWindow(*settings);
+		windows.push_back(remainedWindow);
+		auto remainedApp = make_shared<displayApp>(monitorIndex, paramVal, shareTex, bezManager, usingFormula, showDebugInfo, fontSize);
+		ofRunApp(remainedWindow, remainedApp);
+	}
+	areWindowsSetup = true;
+
+	cout << "succeed allocating all apps" << endl;
+}
 
 void ofApp::onOSCMessageReceived(ofxOscMessage &msg) {
 	string addr = msg.getAddress();
@@ -75,8 +104,6 @@ void ofApp::onOSCMessageReceived(ofxOscMessage &msg) {
 
 }
 
-ofxOscMessage m;
-
 //--------------------------------------------------------------
 void ofApp::update() {
 	while (oscReceiver.hasWaitingMessages()) {		
@@ -84,7 +111,6 @@ void ofApp::update() {
 		onOSCMessageReceived(m);
 	}
 }
-
 
 enum SpoutShareMode {
 	Tex = 0,
@@ -112,10 +138,10 @@ void ofApp::drawTex(ofTexture& tex) {
 		return;
 
 	try {
-		if (fbo != nullptr)
-			fbo->begin();
+
+		fbo.begin();
 		
-		//draw partial
+		//draw partial texture to frame buffer and warp it later
 		if (usingFormula) {
 			unsigned int startX = (winWidth - overlapPixels) * paramVal;
 			tex.drawSubsection(0, 0, winWidth, winHeight, startX, 0, winWidth, winHeight);
@@ -124,8 +150,9 @@ void ofApp::drawTex(ofTexture& tex) {
 			tex.drawSubsection(0, 0, winWidth, winHeight, paramVal, 0, winWidth, winHeight);
 		}
 
-		if (fbo != nullptr)
-			fbo->end();
+		fbo.end();
+
+		warp->draw();
 	}
 	catch (const char * e) {
 		ofLogError("drawTex in ofApp:") << e;
@@ -158,16 +185,16 @@ void ofApp::spoutTryToReceiveTex() {
 				g_Height = height;
 			}
 			
-			processTex(*shareTex);
+			processTex(shareTex);
 			bInitialized = true;
 
 			return; // quit for next round
 
 		} // receiver was initialized
 		else {
-			if (shareTex->isAllocated()) {
+			if (shareTex.isAllocated()) {
 				//flush it to black
-				shareTex->clear();
+				shareTex.clear();
 			}
 
 			drawFromCenter("No source detected", 0, 0);
@@ -182,7 +209,7 @@ void ofApp::spoutTryToReceiveTex() {
 		width = g_Width;
 		height = g_Height;
 
-		auto associatedTexData = shareTex->getTextureData();
+		auto associatedTexData = shareTex.getTextureData();
 
 		// Try to receive into the local the texture at the current size
 		if (spoutreceiver.ReceiveTexture(SenderName, width, height,
@@ -195,11 +222,11 @@ void ofApp::spoutTryToReceiveTex() {
 				g_Height = height;
 
 				// Update the local texture to receive the new dimensions
-				processTex(*shareTex);
+				processTex(shareTex);
 				return; // do the rest of work in next frame
 			}
 
-			drawTex(*shareTex);
+			drawTex(shareTex);
 
 			// Show what it is receiving
 			/*
@@ -222,7 +249,7 @@ void ofApp::spoutTryToReceiveTex() {
 
 //--------------------------------------------------------------
 void ofApp::draw() {
-	ofSetColor(255);
+	ofClear(0);
 	
 	spoutTryToReceiveTex();
 
@@ -250,28 +277,11 @@ void ofApp::exit() {
 
 }
 
-//--------------------------------------------------------------
-void ofApp::mousePressed(int x, int y, int button){
-	 
-	// ====== SPOUT =====
-	if(enableSenderSelector && button == 2) { // rh button
-		// Open the sender selection panel
-		// Spout must have been installed
-		spoutreceiver.SelectSenderPanel();
-	}
-}
-
-void ofApp::keyPressed(int key) {
-	if (enableKeyCtrl) {
-		if (key == OF_KEY_UP)
-			setAllWindowsForeground(false);
-		else if (key == OF_KEY_DOWN)
-			setAllWindowsBackground(true);
-	}
-}
 
 void ofApp::setAllWindowsForeground(bool showCursor) {
-	for (const auto& win : *windows) {
+	if (!areWindowsSetup)
+		return;
+	for (const auto& win : windows) {
 		HWND win32win = win->getWin32Window();
 		ShowWindow(win32win, SW_SHOWNOACTIVATE);
 	}
@@ -280,7 +290,9 @@ void ofApp::setAllWindowsForeground(bool showCursor) {
 }
 
 void ofApp::setAllWindowsBackground(bool showCursor) {
-	for (const auto& win : *windows) {
+	if (!areWindowsSetup)
+		return;
+	for (const auto& win : windows) {
 		HWND win32win = win->getWin32Window();
 		ShowWindow(win32win, SW_HIDE);
 	}
@@ -293,8 +305,63 @@ void ofApp::drawFromCenter(const char* msg, float xOffset = 0, float yOffset = 0
 	float msgH = font.stringHeight(msg);
 	float msgW = font.stringWidth(msg);
 
-	font.drawString(msg, (winWidth - msgW) / 2 -  + xOffset, (winHeight - msgH) / 2 -  + yOffset);
+	font.drawString(msg, (winWidth - msgW) / 2 + xOffset, (winHeight - msgH) / 2 + yOffset);
 
 }
 
+void ofApp::loadWarpSetting() {
+	bezManager.loadSettings();
+}
 
+unique_ptr<ofGLFWWindowSettings> ofApp::createWinSetting(int width, int height, int monitorIndex = 0, shared_ptr<ofAppBaseWindow> sharedWin = nullptr) {
+	unique_ptr<ofGLFWWindowSettings> settings(new ofGLFWWindowSettings());
+	settings->windowMode = OF_GAME_MODE;
+	settings->monitor = monitorIndex;
+	settings->width = width;
+	settings->height = height;
+	settings->setPosition(ofVec2f(0, 0));
+	settings->shareContextWith = sharedWin;
+	return settings;
+}
+
+
+//Input Event --------------------------------------------------------------
+void ofApp::mousePressed(int x, int y, int button) {
+	//for displaying app, we dont need adjustment feature
+	//bezManager.mousePressed(x, y, button);
+}
+
+void ofApp::mouseDragged(int x, int y, int button) {
+	
+	// send drag event
+	//for displaying app, we dont need adjustment feature
+	//bezManager.mouseDragged(x, y, button);
+}
+
+void ofApp::keyPressed(int key) {
+	if (enableKeyCtrl) {
+		if (key == OF_KEY_UP)
+			setAllWindowsForeground(false);
+		else if (key == OF_KEY_DOWN)
+			setAllWindowsBackground(true);
+	}
+
+	/* for convenience, I would implement this part via OSC
+	// send key event
+	bezManager.keyPressed(key);
+
+	// show / hide guide
+	if (key == OF_KEY_RETURN) {
+		bezManager.toggleGuideVisible();
+	}
+	// save settings
+	if (key == 's') {
+		bezManager.saveSettings();
+	}
+	// load settings
+	if (key == 'l') {
+		bezManager.loadSettings();
+	}
+	
+	*/
+}

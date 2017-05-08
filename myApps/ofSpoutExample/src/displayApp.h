@@ -2,6 +2,7 @@
 
 #include "ofMain.h"
 #include "..\..\..\SpoutSDK\Spout.h" // Spout SDK
+#include "ofxBezierWarpManager.h"
 
 class displayApp : public ofBaseApp
 {
@@ -12,18 +13,20 @@ public:
 	void exit();
 	
 	bool bInitialized;		     // Initialization result
-	ofFbo* fbo = nullptr;	     
+	ofFbo fbo;	     
+	ofxBezierWarp* warp;
+	ofxBezierWarpManager* bezManager;
 	ofTexture* shareTex; //it would be allocated with huge size and shared among all apps
 	
 	int g_Width, g_Height;       // Used for checking sender size change
 	int paramVal = 0;
 	int monitorIndex = -1;
-	displayApp(int monitorIndex , int value, ofFbo* sharedFbo, ofTexture* shareTex, bool usingFormula, bool showDebugInfo, int fontSize) {
+	displayApp(int monitorIndex, int value, ofTexture& shareTex, ofxBezierWarpManager& bzManager, bool usingFormula, bool showDebugInfo, int fontSize) {
 		this->monitorIndex = monitorIndex;
 		this->paramVal = value;
-		this->fbo = sharedFbo;
 		this->usingFormula = usingFormula;
-		this->shareTex = shareTex;
+		this->shareTex = &shareTex;
+		this->bezManager = &bzManager;
 		this->showDebugInfo = showDebugInfo;
 		this->fontSize = fontSize;
 	}

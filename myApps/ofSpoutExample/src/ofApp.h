@@ -24,6 +24,7 @@
 #include "ofMain.h"
 #include "..\..\..\SpoutSDK\Spout.h" // Spout SDK
 #include "ofxOsc.h"
+#include "ofxBezierWarpManager.h"
 
 class ofApp : public ofBaseApp{
 	public:
@@ -32,10 +33,13 @@ class ofApp : public ofBaseApp{
 		void draw();
 		void exit();
 		void mousePressed(int x, int y, int button);
+		void mouseDragged(int x, int y, int button);
 		void keyPressed(int key);
 		bool bInitialized;		     // Initialization result
-		ofFbo* fbo = nullptr;	     
-		ofTexture* shareTex; //it would be allocated with huge size and shared among all apps
+		ofFbo fbo;	     
+		ofxBezierWarpManager bezManager;
+		ofxBezierWarp* warp;
+		ofTexture shareTex; //it would be allocated with huge size and shared among all apps
 
 		char SenderName[256];	     // Sender name used by a receiver
 		int g_Width, g_Height;       // Used for checking sender size change
@@ -43,18 +47,24 @@ class ofApp : public ofBaseApp{
 		int paramVal = 0;
 		int monitorIndex = -1;
 		
-		ofApp(int monitorIndex, int value, vector<shared_ptr<ofAppBaseWindow>>& windows, ofFbo* fbo, ofTexture* shareTex, bool usingFormula, bool showDebugInfo, int fontSize) {
+		ofApp(int monitorIndex, int value, bool usingFormula, bool showDebugInfo, int fontSize, 
+			int numMonToUse, 
+			vector<ofVec2f>& monitorResolution, 
+			vector<int>& correspond,
+			vector<int>& monitorIndices) {
+
 			this->monitorIndex = monitorIndex;
 			this->paramVal = value;
-			this->windows = &windows;
-			this->fbo = fbo;
 			this->usingFormula = usingFormula;
-			this->shareTex = shareTex;
 			this->showDebugInfo = showDebugInfo;
 			this->fontSize = fontSize;
+			this->numMonitorsToUse = numMonToUse;
+			this->monitorResolution = monitorResolution;
+			this->correspond = correspond;
+			this->monitorIndices = monitorIndices;
+
 		}
 
-		bool enableSenderSelector = false;
 		bool enableKeyCtrl = false;
 		bool usingFormula = true;
 		const int defaultFormat = GL_RGB;
@@ -70,10 +80,13 @@ class ofApp : public ofBaseApp{
 		void drawTex(ofTexture& tex);
 		void processTex(ofTexture& tex);
 		void drawFromCenter(const char* msg, float xOffset, float yOffset);
-
+		unique_ptr<ofGLFWWindowSettings> createWinSetting(int width, int height, int monitorIndex, shared_ptr<ofAppBaseWindow> sharedWin);
+		void setupRestOfWindows();
+		void loadWarpSetting();
 		SpoutReceiver spoutreceiver; // A Spout receiver object
 		ofxOscReceiver oscReceiver;
-		vector<shared_ptr<ofAppBaseWindow>>* windows;
+		ofxOscMessage m;
+		vector<shared_ptr<ofAppBaseWindow>> windows;
 
 		int oscPort = 10000;
 		unsigned int winWidth = 0;
@@ -86,5 +99,11 @@ class ofApp : public ofBaseApp{
 		ofTrueTypeFont font;
 		int fontSize = 32;
 		char str[256];
-		
+
+		int numMonitorsToUse = 1;
+		vector<ofVec2f> monitorResolution;
+		vector<int> correspond;
+		vector<int> monitorIndices;
+
+		bool areWindowsSetup = false;
 };
